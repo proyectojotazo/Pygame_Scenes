@@ -9,8 +9,6 @@ from folders import *
 from tools import *
 from config import *
 
-
-
 class Ship(pg.sprite.Sprite):
 
     def __init__(self):
@@ -128,6 +126,10 @@ class Ship(pg.sprite.Sprite):
         if self.rect.left >= WIDTH:
             self.state = STATES['HIDDEN']
 
+    def _restart_ship(self):
+        self.rect.x = 2
+        self.image = load_image(SHIP_FOLDER, 'ship.xcf')
+        self.angle = 0
 class Meteor(pg.sprite.Sprite):
 
     def __init__(self):

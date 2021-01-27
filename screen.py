@@ -4,7 +4,7 @@ import sys
 
 from config import WIDTH, HEIGHT, FPS
 
-from the_quest.title.title_scenes import InitialAnimation
+from the_quest.scenes import InitialAnimation
 
 
 pg.init()

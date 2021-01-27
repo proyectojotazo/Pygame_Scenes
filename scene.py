@@ -12,18 +12,18 @@ class Scene:
     def main_loop(self, screen, dt):
         self.handle_events(screen)
         self.update(screen, dt)
-        self.draw()
         
     def handle_events(self, screen):
-        pass
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                self.terminateScene()
+            if event.type == pg.KEYDOWN:
+                self._keydown_events(event, screen)
 
     def _keydown_events(self, event, screen):
         pass
 
     def update(self, screen, dt):
-        pass
-
-    def draw(self):
         pass
 
     def switchToScene(self, next_scene):

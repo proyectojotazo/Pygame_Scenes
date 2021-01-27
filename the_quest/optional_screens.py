@@ -12,14 +12,14 @@ class BlackScreen():
         self.ship_img, self.ship_rect = load_image(SHIP_FOLDER, 'ship.xcf')
         self.ticks = 0
 
-    def on_black(self, screen, lifes):
+    def on_black(self, screen, level, lifes):
         '''
         Mainloop for black screen
         '''
         while not self.start:
             self.ticks += pg.time.Clock().tick(FPS)
             self._handle_events()
-            self._update_screen(screen, lifes)
+            self._update_screen(screen, level, lifes)
         self.start = False
         self.ticks = 0
 
@@ -35,14 +35,14 @@ class BlackScreen():
                 if event.key == pg.K_SPACE:
                     self.start = True
 
-    def _update_screen(self, screen, lifes):
+    def _update_screen(self, screen, level, lifes):
         # TODO: Function for blink text
         '''
         Method that draws and update the black screen
         '''
         screen.fill(BLACK)
 
-        create_draw_text(screen, SPACE2, 32, 'Level 1 - 1', WHITE, position='closecenterup', width=WIDTH, height=HEIGHT)
+        create_draw_text(screen, SPACE2, 32, f'Level - {level}', WHITE, position='closecenterup', width=WIDTH, height=HEIGHT)
         create_draw_text(screen, SPACE, 16, 'Lifes - ', WHITE, position='closecenterleft', width=WIDTH, height=HEIGHT)
 
         x_pos_lifes = 0
