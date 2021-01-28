@@ -5,11 +5,11 @@ import os, sys
 from tools import *
 from config import *
 
-class BlackScreen():
+class BlackScreen:
 
     def __init__(self):
         self.start = False
-        self.ship_img, self.ship_rect = load_image(SHIP_FOLDER, 'ship.xcf')
+        self.ship_img, self.ship_rect = load_image(SHIP_FOLDER, 'ship.png')
         self.ticks = 0
 
     def on_black(self, screen, level, lifes):

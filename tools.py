@@ -5,7 +5,7 @@ Tools for help to load and draw some stuff
 import pygame as pg
 
 import os
-
+pg.init()
 # IMAGES TOOLS
 
 def load_image(path, img, x=0, y=0, rect=True):

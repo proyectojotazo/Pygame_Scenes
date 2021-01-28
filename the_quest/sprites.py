@@ -14,7 +14,7 @@ class Ship(pg.sprite.Sprite):
     def __init__(self):
         pg.sprite.Sprite.__init__(self)
 
-        self.image, self.rect = load_image(SHIP_FOLDER, 'ship.xcf', y=276)
+        self.image, self.rect = load_image(SHIP_FOLDER, 'ship.png', y=276)
 
         self.selected_expl_img = 0
         self.speed_explosion = 0
@@ -82,13 +82,13 @@ class Ship(pg.sprite.Sprite):
         '''
 
         if self.selected_expl_img >= 8:
-            img = load_image(SHIP_FOLDER, 'ship.xcf', rect=False)
+            img = load_image(SHIP_FOLDER, 'ship.png', rect=False)
             self.selected_expl_img = 0
             self.lifes -= 1
             self.state = STATES['NOT ALIVE']
 
         else:
-            img = load_image(EXPLOSION_FOLDER, f'explosion_{self.selected_expl_img}.xcf', rect=False)
+            img = load_image(EXPLOSION_FOLDER, f'explosion_{self.selected_expl_img}.png', rect=False)
             if self.speed_explosion % 4 == 0:
                 self.selected_expl_img += 1
 
@@ -100,7 +100,7 @@ class Ship(pg.sprite.Sprite):
         Method who makes the ship rotation
         '''
         if self.angle <= 180:
-            rotated_img = pg.transform.rotozoom(load_image(SHIP_FOLDER, 'ship.xcf', rect=False), self.angle, 1)
+            rotated_img = pg.transform.rotozoom(load_image(SHIP_FOLDER, 'ship.png', rect=False), self.angle, 1)
             rect_rotated_img = rotated_img.get_rect(center=(24, self.rect.centery))
             self.image = rotated_img
             self.rect = rect_rotated_img
@@ -126,10 +126,11 @@ class Ship(pg.sprite.Sprite):
         if self.rect.left >= WIDTH:
             self.state = STATES['HIDDEN']
 
-    def _restart_ship(self):
+    def _prepare_ship(self):
         self.rect.x = 2
-        self.image = load_image(SHIP_FOLDER, 'ship.xcf')
+        self.image = load_image(SHIP_FOLDER, 'ship.png', rect=False)
         self.angle = 0
+
 class Meteor(pg.sprite.Sprite):
 
     def __init__(self):
@@ -145,7 +146,7 @@ class Meteor(pg.sprite.Sprite):
 
         self.points = METEORS_DATA[f'meteor{self.random_meteor}']['points']
 
-        self.vx = random.randint(5, 12)
+        self.vx = random.randint(5, 8)
 
     def update(self):
         '''

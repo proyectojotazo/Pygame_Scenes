@@ -15,31 +15,31 @@ FPS = 60
 GAME_TITLE = 'The Quest'
 
 # Meteors Settings
-MAX_METEORS = 7
+MAX_METEORS = 6
 METEORS_DATA = {
     'meteor1':{
         'height':38,
-        'points':10,
+        'points':50,
     },
     'meteor2':{
         'height':41,
-        'points':10,
+        'points':50,
     },
     'meteor3':{
         'height':71,
-        'points':20,
+        'points':250,
     },
     'meteor4':{
         'height':66,
-        'points':20,
+        'points':250,
     },
     'meteor5':{
         'height':111,
-        'points':50,
+        'points':500,
     },
     'meteor6':{
         'height':101,
-        'points':50,
+        'points':500,
     },
 }
 METEORS_TO_DODGE = 40

@@ -6,9 +6,6 @@ from config import WIDTH, HEIGHT, FPS
 
 from the_quest.scenes import InitialAnimation
 
-
-pg.init()
-
 class Screen:
 
     def __init__(self, starting_scene):
@@ -26,5 +23,6 @@ class Screen:
             self.active_scene = self.active_scene.next
 
 if __name__ == '__main__':
+    pg.init()
     a = Screen(InitialAnimation())
     a.start_game()
