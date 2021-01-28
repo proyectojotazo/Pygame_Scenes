@@ -141,14 +141,37 @@ class HowToPlay(Scene):
     def __init__(self):
         Scene.__init__(self)
 
+        self.ticks = 0
+
     def _keydown_events(self, event, screen):
         Scene._keydown_events(self, event, screen)
         if event.key == pg.K_SPACE:
             self.switchToScene(TitleScene())
 
     def update(self, screen, dt):
-        screen.fill(BLUE)
-        create_draw_text(screen, SPACE2, 54, 'INSTRUCCTIONS', WHITE, position='topcenter', width=WIDTH, height=HEIGHT)
+
+        self.ticks += dt
+
+        screen.fill(BLACK)
+        create_draw_text(screen, SPACE2, 54, 'HOW TO PLAY', WHITE, position='topcenter', width=WIDTH, height=HEIGHT)
+        create_draw_text(screen, SPACE, 20, 'Keys to use:', WHITE, position='closecenterup', width=WIDTH, height=HEIGHT)
+
+        load_and_draw_image(screen, HOW_TO_FOLDER, 'up.png', 40, 280)
+        load_and_draw_image(screen, HOW_TO_FOLDER, 'down.png', 40, 360)
+        load_and_draw_image(screen, HOW_TO_FOLDER, 'spacebar.png', 390, 280)
+        load_and_draw_image(screen, HOW_TO_FOLDER, 'escape.png', 390, 360)
+
+        create_draw_text(screen, SPACE, 16, 'Moves ship up', WHITE, pos_x=120, pos_y=300)
+        create_draw_text(screen, SPACE, 16, 'Moves ship down', WHITE, pos_x=120, pos_y=380)
+        create_draw_text(screen, SPACE, 16, 'Action/Accept Key', WHITE, pos_x=520, pos_y=300)
+        create_draw_text(screen, SPACE, 16, 'Quit the game', WHITE, pos_x=480, pos_y=380)
+        
+        if self.ticks <= 1000:
+            create_draw_text(screen, SPACE, 16, 'Press < SPACE > to go Main Menu', WHITE, position='bottomcenter', width=WIDTH, height=HEIGHT)
+        elif self.ticks <= 1500:
+            pass
+        else:
+            self.ticks = 0
 
         pg.display.update()
 
@@ -238,7 +261,7 @@ class Level2Test(AdvancedLevelScene):
             reset = self.pause_screen.on_pause(screen)
             if reset:
                 self._reset(all_data=True)
-                self.switchToScene(self)
+                self.switchToScene(Level2Test('MARS', 2, GameOver(), self.score, self.ship.lifes))
     
     def _reset(self, all_data=False):
         AdvancedLevelScene._reset(self)

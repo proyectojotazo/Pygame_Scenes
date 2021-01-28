@@ -8,10 +8,11 @@ from folders import *
 from tools import *
 
 pg.mixer.init()
+
 # Screen Settings
 WIDTH = 800
 HEIGHT = 600
-FPS = 60
+FPS = 120
 GAME_TITLE = 'The Quest'
 
 # Meteors Settings
@@ -78,4 +79,4 @@ SELECTED_SOUND = load_sound(SOUNDS_FOLDER, 'option-selected.wav')
 SELECTED_SOUND.set_volume(0.02)
 
 # Sounds Settings
-BACKGROUND_VOL = 0.2
+BACKGROUND_VOL = 0.1

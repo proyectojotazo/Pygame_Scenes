@@ -19,6 +19,7 @@ SOUNDS_FOLDER = os.path.join(RESOURCES_FOLDER, 'sounds')
 ### Images subdirectories
 SHIP_FOLDER = os.path.join(IMAGES_FOLDER, 'ship')
 METEORS_FOLDER = os.path.join(IMAGES_FOLDER, 'meteors')
+HOW_TO_FOLDER = os.path.join(IMAGES_FOLDER, 'how_to')
 
 #### Ship subdirectories
 EXPLOSION_FOLDER = os.path.join(SHIP_FOLDER, 'explosion_animation')

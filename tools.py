@@ -5,7 +5,7 @@ Tools for help to load and draw some stuff
 import pygame as pg
 
 import os
-pg.init()
+# pg.init()
 # IMAGES TOOLS
 
 def load_image(path, img, x=0, y=0, rect=True):
@@ -99,9 +99,6 @@ def create_draw_text(screen, font, size, text, color, position='', pos_x=0, pos_
         pos_x = width/2-(msg_txt.get_size()[0]//2)
         pos_y = height/1.2-(msg_txt.get_size()[1]//2)
 
-    # if position:
-    #     screen.blit(msg_txt, (positions[position][pos_x], positions[position][pos_y]))
-    # else:
     screen.blit(msg_txt, (pos_x, pos_y))
 
 # SOUNDS TOOLS
