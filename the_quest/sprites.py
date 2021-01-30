@@ -93,6 +93,7 @@ class Ship(pg.sprite.Sprite):
                 self.selected_expl_img += 1
 
         self.speed_explosion += 1
+        
         return img
 
     def _rotate(self):
@@ -101,7 +102,7 @@ class Ship(pg.sprite.Sprite):
         '''
         if self.angle <= 180:
             rotated_img = pg.transform.rotozoom(load_image(SHIP_FOLDER, 'ship.png', rect=False), self.angle, 1)
-            rect_rotated_img = rotated_img.get_rect(center=(24, self.rect.centery))
+            rect_rotated_img = rotated_img.get_rect(center=(self.rect.centerx, self.rect.centery))
             self.image = rotated_img
             self.rect = rect_rotated_img
             self.angle += 1
@@ -127,6 +128,9 @@ class Ship(pg.sprite.Sprite):
             self.state = STATES['HIDDEN']
 
     def _prepare_ship(self):
+        '''
+        Prepare the ship for next level
+        '''
         self.rect.x = 2
         self.image = load_image(SHIP_FOLDER, 'ship.png', rect=False)
         self.angle = 0
@@ -148,8 +152,22 @@ class Meteor(pg.sprite.Sprite):
 
         self.vx = random.randint(5, 8)
 
+        self.angle = 0
+
     def update(self):
         '''
         Update meteor method
         '''
         self.rect.x -= self.vx
+        # Maybe not?
+        # self._rotate()
+
+    def _rotate(self):
+        '''
+        Method who makes the ship rotation
+        '''
+        self.angle = (self.angle + 1)%360
+        rotated_img = pg.transform.rotozoom(load_image(METEORS_FOLDER, f'meteor{self.random_meteor}.png', rect=False), self.angle, 1)
+        rect_rotated_img = rotated_img.get_rect(center=(self.rect.centerx, self.rect.centery))
+        self.image = rotated_img
+        self.rect = rect_rotated_img

@@ -11,6 +11,7 @@ class Scene:
 
     def __init__(self):
         self.next = self
+        self.ticks = 0
 
     def main_loop(self, screen, dt):
         self.handle_events(screen)
@@ -29,6 +30,14 @@ class Scene:
 
     def update(self, screen, dt):
         pass
+
+    def _blink_message(self, screen, font, size, text, color, position, width=WIDTH, height=HEIGHT, antialias=True):
+        if self.ticks <= 1000:
+            create_draw_text(screen, font, size, text, color, position=position, width=width, height=height, antialias=antialias)
+        elif self.ticks <=1500:
+            pass
+        else:
+            self.ticks = 0
 
     def switchToScene(self, next_scene):
         self.next = next_scene
@@ -75,12 +84,13 @@ class LevelScene(Scene):
                 and self.meteors_dodged >= METEORS_TO_DODGE\
                 and self.planet_x == 272 and self.ship.rect.top >= 200\
                 and self.ship.rect.top <= 300:
+
                 self.ship.state = STATES['ROTATING']
             # Click for land
             if self.ship.state == STATES['PREPARED TO LAND']\
                 and self.ship.rect.top >= 200:
-                self.ship.state = STATES['LANDING']
 
+                self.ship.state = STATES['LANDING']
     def update(self, screen, dt):
 
         self._add_meteors(dt)
@@ -163,7 +173,7 @@ class LevelScene(Scene):
 
         create_draw_text(screen, SPACE, 16, f'Lifes - {self.ship.lifes}', WHITE, pos_x=50, pos_y=15)
         create_draw_text(screen, SPACE, 16, f'Meteors Dodged - {self.meteors_dodged}', WHITE, pos_x=240, pos_y=15)
-        create_draw_text(screen, SPACE, 16, f'Score - {self.score}', WHITE, pos_x=590, pos_y=15)
+        create_draw_text(screen, SPACE, 16, f'Score - {self.score}', WHITE, pos_x=580, pos_y=15)
         
         screen.blit(top_level_img, (0, 0))
 

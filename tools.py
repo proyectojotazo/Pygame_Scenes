@@ -51,8 +51,7 @@ def create_draw_text(screen, font, size, text, color, position='', pos_x=0, pos_
     ---default params---
     position:
         If we want an specific position for the text we have to
-        indicate, as, topcenter, center, closecenterup, closecenterleft,
-        and bottomcenter.
+        indicate in 'position' arg as:
             topcenter= takes the center of text size and puts centered in width
                         and top of the screen
             center = puts the text on the center of the screen
@@ -66,40 +65,52 @@ def create_draw_text(screen, font, size, text, color, position='', pos_x=0, pos_
             bottomcenter = puts the text centered on width and closer to bottom
                         margin of the screen
         If we choose to add position param, we must to use also width and height
-        and recommendable to use also pos_x and pos_y
-        width and height are the params we use to move the text centered
+        width and height are the params we use to specify the width and height of our screen
         pos_x and pos_y are the initial pos that we want to draw our text    
     '''
     
     msg_font = pg.font.Font(font, size)
     msg_txt = msg_font.render(text, antialias, color)
 
-    if position == 'topcenter':
-        pos_x = width/2-(msg_txt.get_size()[0]//2)
-        pos_y = 75
-    if position == 'center':
-        pos_x = width/2-(msg_txt.get_size()[0]//2)
-        pos_y = height/2-(msg_txt.get_size()[1]//2)
-    if position == 'closecenterup':
-        pos_x = width/2-(msg_txt.get_size()[0]//2)
-        pos_y = (height/2)//1.5
-    if position == 'closecenterleft':
-        pos_x = width/2-(msg_txt.get_size()[0]//0.8)
-        pos_y = height/2-(msg_txt.get_size()[1]//2)
-    if position == 'closecenterbottom':
-        pos_x = width/2-(msg_txt.get_size()[0]//2)
-        pos_y = height//1.7-(msg_txt.get_size()[1]//2)
-    if position == 'closecenterbottom2':
-        pos_x = width/2-(msg_txt.get_size()[0]//2)
-        pos_y = height//1.49-(msg_txt.get_size()[1]//2)
-    if position == 'closecenterbottom3':
-        pos_x = width/2-(msg_txt.get_size()[0]//2)
-        pos_y = height//1.32-(msg_txt.get_size()[1]//2)
-    if position == 'bottomcenter':
-        pos_x = width/2-(msg_txt.get_size()[0]//2)
-        pos_y = height/1.2-(msg_txt.get_size()[1]//2)
+    positions = {
+        'topcenter':{
+            'x':width/2-(msg_txt.get_size()[0]//2),
+            'y':75,
+        },
+        'center':{
+            'x':width/2-(msg_txt.get_size()[0]//2),
+            'y':height/2-(msg_txt.get_size()[1]//2),
+        },
+        'closecenterup':{
+            'x':width/2-(msg_txt.get_size()[0]//2),
+            'y':(height/2)//1.5,
+        },
+        'closecenterleft':{
+            'x':width/2-(msg_txt.get_size()[0]//0.8),
+            'y':height/2-(msg_txt.get_size()[1]//2),
+        },
+        'closecenterbottom':{
+            'x':width/2-(msg_txt.get_size()[0]//2),
+            'y':height//1.7-(msg_txt.get_size()[1]//2),
+        },
+        'closecenterbottom2':{
+            'x':width/2-(msg_txt.get_size()[0]//2),
+            'y':height//1.49-(msg_txt.get_size()[1]//2),
+        },
+        'closecenterbottom3':{
+            'x':width/2-(msg_txt.get_size()[0]//2),
+            'y':height//1.32-(msg_txt.get_size()[1]//2),
+        },
+        'bottomcenter':{
+            'x':width/2-(msg_txt.get_size()[0]//2),
+            'y':height/1.2-(msg_txt.get_size()[1]//2),
+        },
+    }
 
-    screen.blit(msg_txt, (pos_x, pos_y))
+    if position:         
+        screen.blit(msg_txt, (positions[position]['x'], positions[position]['y']))
+    else:
+        screen.blit(msg_txt, (pos_x, pos_y))
 
 # SOUNDS TOOLS
     

@@ -11,6 +11,9 @@ MAIN_FOLDER = os.path.dirname(__file__)
 ## Resources directory
 RESOURCES_FOLDER = os.path.join(MAIN_FOLDER, 'resources')
 
+## DB directory
+DB_FOLDER = os.path.join(MAIN_FOLDER, 'data')
+
 ## Resources subdirectories
 FONTS_FOLDER = os.path.join(RESOURCES_FOLDER, 'fonts')
 IMAGES_FOLDER = os.path.join(RESOURCES_FOLDER, 'images')

@@ -12,7 +12,7 @@ pg.mixer.init()
 # Screen Settings
 WIDTH = 800
 HEIGHT = 600
-FPS = 120
+FPS = 60
 GAME_TITLE = 'The Quest'
 
 # Meteors Settings
@@ -66,6 +66,11 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+GOLD = (255, 223, 0)
+GOLD2 = (212, 175, 55)
+SILVER = (169, 169, 169)
+SILVER2 = (128, 128, 128)
+BRONCE = (153, 101, 21)
 
 # Fonts
 SPACE = os.path.join(FONTS_FOLDER, 'Space_font.ttf')
