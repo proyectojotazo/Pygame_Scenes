@@ -42,16 +42,16 @@ class BlackScreen:
         '''
         screen.fill(BLACK)
 
-        create_draw_text(screen, SPACE2, 32, f'Level - {level}', WHITE, position='closecenterup', width=WIDTH, height=HEIGHT)
-        create_draw_text(screen, SPACE, 16, 'Lifes - ', WHITE, position='closecenterleft', width=WIDTH, height=HEIGHT)
+        create_draw_text(screen, SPACE2, 48, f'Level - {level}', WHITE, position='closecenterup')
+        create_draw_text(screen, SPACE2, 24, 'Lifes - ', WHITE, position='closecenterleft')
 
-        x_pos_lifes = 0
+        x_pos_lifes = 5
         for life in range(lifes):
             screen.blit(self.ship_img, ((WIDTH/2-(self.ship_rect.w/2))+x_pos_lifes, HEIGHT/2-(self.ship_rect.w/2)))
             x_pos_lifes += self.ship_rect.w
 
         if self.ticks <= 500:
-            create_draw_text(screen, SPACE, 16, 'Press < SPACE > to start', WHITE, position='bottomcenter', width=WIDTH, height=HEIGHT)
+            create_draw_text(screen, SPACE2, 24, 'Press < SPACE > to start', WHITE, position='bottomcenter')
         elif self.ticks <= 1000:
             pass
         else:
@@ -136,17 +136,17 @@ class PauseScreen:
         load_and_draw_image(screen, IMAGES_FOLDER, 'pause1.png', x=200, y=170)
 
         if option == 0:
-            create_draw_text(screen, SPACE, 24, 'Continue', RED, position='center', width=WIDTH, height=HEIGHT)
-            create_draw_text(screen, SPACE, 24, 'Restart', WHITE, position="closecenterbottom", width=WIDTH, height=HEIGHT)
-            create_draw_text(screen, SPACE, 24, 'Quit', WHITE, position="closecenterbottom2", width=WIDTH, height=HEIGHT)
+            create_draw_text(screen, SPACE2, 32, 'Continue', RED, position='center')
+            create_draw_text(screen, SPACE2, 32, 'Restart', WHITE, position="closecenterbottom")
+            create_draw_text(screen, SPACE2, 32, 'Quit', WHITE, position="closecenterbottom2")
         elif option == 1:
-            create_draw_text(screen, SPACE, 24, 'Continue', WHITE, position='center', width=WIDTH, height=HEIGHT)
-            create_draw_text(screen, SPACE, 24, 'Restart', RED, position="closecenterbottom", width=WIDTH, height=HEIGHT)
-            create_draw_text(screen, SPACE, 24, 'Quit', WHITE, position="closecenterbottom2", width=WIDTH, height=HEIGHT)
+            create_draw_text(screen, SPACE2, 32, 'Continue', WHITE, position='center')
+            create_draw_text(screen, SPACE2, 32, 'Restart', RED, position="closecenterbottom")
+            create_draw_text(screen, SPACE2, 32, 'Quit', WHITE, position="closecenterbottom2")
         else:
-            create_draw_text(screen, SPACE, 24, 'Continue', WHITE, position='center', width=WIDTH, height=HEIGHT)
-            create_draw_text(screen, SPACE, 24, 'Restart', WHITE, position="closecenterbottom", width=WIDTH, height=HEIGHT)
-            create_draw_text(screen, SPACE, 24, 'Quit', RED, position="closecenterbottom2", width=WIDTH, height=HEIGHT)
+            create_draw_text(screen, SPACE2, 32, 'Continue', WHITE, position='center')
+            create_draw_text(screen, SPACE2, 32, 'Restart', WHITE, position="closecenterbottom")
+            create_draw_text(screen, SPACE2, 32, 'Quit', RED, position="closecenterbottom2")
 
-        create_draw_text(screen, SPACE2, 48, 'PAUSE', WHITE, position='closecenterup', width=WIDTH, height=HEIGHT)
+        create_draw_text(screen, SPACE2, 48, 'PAUSE', WHITE, position='closecenterup')
         pg.display.flip()

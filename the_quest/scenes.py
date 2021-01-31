@@ -27,7 +27,7 @@ class InitialAnimation(Scene):
         screen.fill(BLACK)
 
         self.ticks += dt
-       
+
         load_and_draw_image(screen, SHIP_FOLDER, 'ship-title.png', x=self.x_pos_ship, y=self.y_pos_ship)
         create_draw_text(screen, TITLE, 120, 'THE QUEST', WHITE, pos_x=self.x_pos_title, pos_y=self.y_pos_title)
 
@@ -83,7 +83,8 @@ class TitleScene(Scene):
 
     def update(self, screen, dt):
         screen.fill(BLACK)
-        create_draw_text(screen, TITLE, 120, 'THE QUEST', WHITE, position='topcenter', width=WIDTH, height=HEIGHT)
+        create_draw_text(screen, TITLE, 120, 'THE QUEST', WHITE, position='topcenter')
+        
         self._draw_options(screen)
 
         pg.display.flip()
@@ -95,9 +96,9 @@ class TitleScene(Scene):
 
         for x in range(4):
             if x == self.option:
-                create_draw_text(screen, SPACE, 24, text[x], RED, position=pos[x], width=WIDTH, height=HEIGHT)
+                create_draw_text(screen, SPACE2, 36, text[x], RED, position=pos[x])
             else:
-                create_draw_text(screen, SPACE, 24, text[x], WHITE, position=pos[x], width=WIDTH, height=HEIGHT)
+                create_draw_text(screen, SPACE2, 36, text[x], WHITE, position=pos[x])
 
 class HowToPlay(Scene):
     def __init__(self):
@@ -107,32 +108,150 @@ class HowToPlay(Scene):
         Scene._keydown_events(self, event, screen)
         if event.key == pg.K_SPACE:
             self.switchToScene(TitleScene())
+        if event.key == pg.K_RIGHT:
+            self.switchToScene(HowToPlay2())
 
     def update(self, screen, dt):
-        # TODO: for-loop?
+
         self.ticks += dt
 
         screen.fill(BLACK)
-        create_draw_text(screen, SPACE2, 54, 'HOW TO PLAY', WHITE, position='topcenter', width=WIDTH, height=HEIGHT)
-        create_draw_text(screen, SPACE, 20, 'Keys to use:', WHITE, position='closecenterup', width=WIDTH, height=HEIGHT)
+        
+        self._draw_main_text(screen)
+        self._draw_keys(screen)
+        self._draw_keys_text(screen)
 
+        pg.display.update()
+
+    def _draw_main_text(self, screen):
+        create_draw_text(screen, SPACE2, 54, 'HOW TO PLAY', WHITE, position='topcenter')
+        create_draw_text(screen, SPACE2, 36, 'Keys to use:', WHITE, position='closecenterup')
+        self._blink_message(screen, SPACE2, 24, 'Press < SPACE > to go Main Menu', WHITE, position='bottomcenter')
+        create_draw_text(screen, SPACE2, 16, 'Press <RIGHT> to next page', WHITE, pos_x=460, pos_y=552)
+        create_draw_text(screen, SPACE2, 20, '1/3', WHITE, pos_x=720, pos_y=550)
+
+    def _draw_keys(self, screen):
         load_and_draw_image(screen, HOW_TO_FOLDER, 'up.png', 40, 280)
         load_and_draw_image(screen, HOW_TO_FOLDER, 'down.png', 40, 360)
         load_and_draw_image(screen, HOW_TO_FOLDER, 'spacebar.png', 390, 280)
         load_and_draw_image(screen, HOW_TO_FOLDER, 'escape.png', 390, 360)
 
-        create_draw_text(screen, SPACE, 16, 'Moves ship up', WHITE, pos_x=120, pos_y=300)
-        create_draw_text(screen, SPACE, 16, 'Moves ship down', WHITE, pos_x=120, pos_y=380)
-        create_draw_text(screen, SPACE, 16, 'Action/Accept Key', WHITE, pos_x=520, pos_y=300)
-        create_draw_text(screen, SPACE, 16, 'Quit the game', WHITE, pos_x=480, pos_y=380)
-        
-        self._blink_message(screen, SPACE, 16, 'Press < SPACE > to go Main Menu', WHITE, position='bottomcenter')
-
-        pg.display.update()
+    def _draw_keys_text(self, screen):
+        create_draw_text(screen, SPACE2, 24, 'Moves ship up', WHITE, pos_x=120, pos_y=300)
+        create_draw_text(screen, SPACE2, 24, 'Moves ship down', WHITE, pos_x=120, pos_y=380)
+        create_draw_text(screen, SPACE2, 24, 'Action/Accept Key', WHITE, pos_x=520, pos_y=300)
+        create_draw_text(screen, SPACE2, 24, 'Quit the game', WHITE, pos_x=520, pos_y=380)
 
 class HowToPlay2(Scene):
-    #TODO: Explain the landing positions
-    pass
+    
+    def __init__(self):
+        Scene.__init__(self)
+        self.bg_img = load_image(IMAGES_FOLDER, 'background.png', rect=False)
+        self.ship_img, self.ship_rect = load_image(SHIP_FOLDER, 'ship.png')
+        self.planet = load_image(IMAGES_FOLDER, 'JUPITER.png', rect=False)
+
+    def _keydown_events(self, event, screen):
+        Scene._keydown_events(self, event, screen)
+        if event.key == pg.K_SPACE:
+            self.switchToScene(TitleScene())
+        if event.key == pg.K_LEFT:
+            self.switchToScene(HowToPlay())
+        if event.key == pg.K_RIGHT:
+            self.switchToScene(HowToPlay3())
+
+    def update(self, screen, dt):
+        screen.blit(self.bg_img, (0, 0))
+        screen.blit(self.planet, (530, 50))
+        screen.blit(self.ship_img, (2, (HEIGHT/2)-24))
+
+        self._top_level_menu(screen)
+        self._draw_main_text(screen)
+        self._landing_lines(screen)
+        self._landing_messages(screen)
+
+        pg.display.flip()
+
+    def _draw_main_text(self, screen):
+        create_draw_text(screen, SPACE2, 50, 'POSITIONS TO LAND', WHITE, position='topcenter')
+        create_draw_text(screen, SPACE2, 16, 'Press <LEFT> <RIGHT> to switch page', WHITE, pos_x=80, pos_y=552)
+        create_draw_text(screen, SPACE2, 20, '2/3', WHITE, pos_x=20, pos_y=550)
+
+    def _top_level_menu(self, screen):
+        top_level_img, top_level_img_rect = load_image(IMAGES_FOLDER, 'score1.png')
+
+        create_draw_text(screen, SPACE2, 24, f'Lifes - 3', WHITE, pos_x=50, pos_y=10)
+        create_draw_text(screen, SPACE2, 24, f'Meteors Dodged - 0', WHITE, pos_x=240, pos_y=10)
+        create_draw_text(screen, SPACE2, 24, f'Score - 0', WHITE, pos_x=580, pos_y=10)
+        
+        screen.blit(top_level_img, (0, 0))
+
+    def _landing_lines(self, screen):
+
+        # Rotating Zone
+        pg.draw.line(screen, SILVER, (0, 70), (20, 70))
+        pg.draw.line(screen, SILVER, (0, HEIGHT-20), (20, HEIGHT-20))
+
+        # Perfect Landing
+        pg.draw.line(screen, GREEN, (0, (HEIGHT/2)-40), (20, (HEIGHT/2)-40))
+        pg.draw.line(screen, GREEN, (0, (HEIGHT/2)+40), (20, (HEIGHT/2)+40))
+
+        # Succesfully Landing
+        pg.draw.line(screen, ORANGE, (0, (HEIGHT/2)-80), (20, (HEIGHT/2)-80))
+        pg.draw.line(screen, ORANGE, (0, (HEIGHT/2)+80), (20, (HEIGHT/2)+80))
+
+        # Not Bad Landing
+        pg.draw.line(screen, RED, (0, (HEIGHT/2)-120), (20, (HEIGHT/2)-120))
+        pg.draw.line(screen, RED, (0, (HEIGHT/2)+120), (20, (HEIGHT/2)+120))
+
+    def _landing_messages(self, screen):
+
+        create_draw_text(screen, SPACE2, 16, 'ROTATING ZONE', SILVER, pos_x=25 ,pos_y=63)
+        create_draw_text(screen, SPACE2, 16, 'PERFECT LANDING', GREEN, pos_x=25 ,pos_y=(HEIGHT/2)-47)
+        create_draw_text(screen, SPACE2, 16, 'SUCCESSFULLY LANDING', ORANGE, pos_x=25 ,pos_y=(HEIGHT/2)-87)
+        create_draw_text(screen, SPACE2, 16, 'NOT BAD LANDING', RED, pos_x=25 ,pos_y=(HEIGHT/2)-127)
+    
+class HowToPlay3(Scene):
+
+    def __init__(self):
+        Scene.__init__(self)
+
+    def _keydown_events(self, event, screen):
+        Scene._keydown_events(self, event, screen)
+        if event.key == pg.K_SPACE:
+            self.switchToScene(TitleScene())
+        if event.key == pg.K_LEFT:
+            self.switchToScene(HowToPlay2())
+
+    def update(self, screen, dt):
+
+        self.ticks += dt
+
+        screen.fill(BLACK)
+
+        self._draw_main_text(screen)
+        self._draw_landing_text(screen)
+        self._draw_lifes_text(screen)
+
+        pg.display.flip()
+
+    def _draw_main_text(self, screen):
+        create_draw_text(screen, SPACE2, 50, 'ADDITIONAL BONUS', WHITE, position='topcenter')
+        create_draw_text(screen, SPACE2, 20, '- At the end of each level we can get a bonus based on:', WHITE, pos_x=100, pos_y=150)
+        create_draw_text(screen, SPACE2, 16, 'Press <LEFT> to previous page', WHITE, pos_x=80, pos_y=552)
+        create_draw_text(screen, SPACE2, 20, '3/3', WHITE, pos_x=20, pos_y=550)
+        self._blink_message(screen, SPACE2, 24, 'Press < SPACE > to go Main Menu', WHITE, position='bottomcenter')
+    
+    def _draw_landing_text(self, screen):
+        create_draw_text(screen, SPACE2, 20, '- Landing:', WHITE, pos_x=200, pos_y=200)
+        create_draw_text(screen, SPACE2, 20, 'PERFECT = 1000 pts', GREEN, pos_x=330, pos_y=200)
+        create_draw_text(screen, SPACE2, 20, 'SUCCESSFULLY = 500 pts', ORANGE, pos_x=330, pos_y=240)
+        create_draw_text(screen, SPACE2, 20, 'NOT BAD = 250 pts', RED, pos_x=330, pos_y=280)
+
+    def _draw_lifes_text(self, screen):
+        create_draw_text(screen, SPACE2, 20, '- Lifes:', WHITE, pos_x=200, pos_y=330)
+        create_draw_text(screen, SPACE2, 20, '3 LIFES = 1000 pts', GREEN, pos_x=330, pos_y=330)
+        create_draw_text(screen, SPACE2, 20, '2 LIFES = 500 pts', ORANGE, pos_x=330, pos_y=370)
+        create_draw_text(screen, SPACE2, 20, '1 LIFE = 250 pts', RED, pos_x=330, pos_y=410)
 
 class Records(Scene):
 
@@ -153,23 +272,23 @@ class Records(Scene):
         self.ticks += dt
         screen.fill(BLACK)
         # Draws static text
-        create_draw_text(screen, SPACE, 12, 'Press R to reset records', WHITE, pos_x=10, pos_y=10)
-        create_draw_text(screen, SPACE2, 54, 'RECORDS', WHITE, position='topcenter', width=WIDTH, height=HEIGHT)
-        create_draw_text(screen, SPACE, 20, 'RANK', WHITE, pos_x=150, pos_y=180)
-        create_draw_text(screen, SPACE, 20, 'SCORE', WHITE, pos_x=340, pos_y=180)
-        create_draw_text(screen, SPACE, 20, 'NAME', WHITE, pos_x=550, pos_y=180)
+        create_draw_text(screen, SPACE2, 20, 'Press R to reset records', WHITE, pos_x=10, pos_y=10)
+        create_draw_text(screen, SPACE2, 54, 'RECORDS', WHITE, position='topcenter')
+        create_draw_text(screen, SPACE2, 28, 'RANK', WHITE, pos_x=150, pos_y=180)
+        create_draw_text(screen, SPACE2, 28, 'SCORE', WHITE, pos_x=340, pos_y=180)
+        create_draw_text(screen, SPACE2, 28, 'NAME', WHITE, pos_x=550, pos_y=180)
 
         records = BBDD().get_dict_records(BBDD()._select_records())
 
         # Draws records
         rank_y=230
         for x in range(1,6):
-            create_draw_text(screen, SPACE, 16, records[f'record{x}']['rank'], records[f'record{x}']['color'], pos_x=190, pos_y=rank_y)
-            create_draw_text(screen, SPACE, 16, str(records[f'record{x}']['score']), records[f'record{x}']['color'], pos_x=350, pos_y=rank_y)
-            create_draw_text(screen, SPACE, 16, records[f'record{x}']['name'], records[f'record{x}']['color'], pos_x=560, pos_y=rank_y)
+            create_draw_text(screen, SPACE2, 24, records[f'record{x}']['rank'], records[f'record{x}']['color'], pos_x=190, pos_y=rank_y)
+            create_draw_text(screen, SPACE2, 24, str(records[f'record{x}']['score']), records[f'record{x}']['color'], pos_x=350, pos_y=rank_y)
+            create_draw_text(screen, SPACE2, 24, records[f'record{x}']['name'], records[f'record{x}']['color'], pos_x=560, pos_y=rank_y)
             rank_y += 40
 
-        self._blink_message(screen, SPACE, 16, 'Press < SPACE > to go Main Menu', WHITE, position='bottomcenter')
+        self._blink_message(screen, SPACE2, 24, 'Press < SPACE > to go Main Menu', WHITE, position='bottomcenter')
 
         pg.display.flip()
 
@@ -220,14 +339,14 @@ class StartingGame(Scene):
 
         load_and_draw_image(screen, IMAGES_FOLDER, 'background.png')
         load_and_draw_image(screen, IMAGES_FOLDER, 'score1.png', y=self.ix_pos)
-        create_draw_text(screen, SPACE, 16, f'Lifes - {LIFES}', WHITE, pos_x=50, pos_y=self.ix_pos+15)
-        create_draw_text(screen, SPACE, 16, 'Meteors Dodged - 0' , WHITE, pos_x=240, pos_y=self.ix_pos+15)
-        create_draw_text(screen, SPACE, 16, 'Score - 0', WHITE, pos_x=580, pos_y=self.ix_pos+15)
+        create_draw_text(screen, SPACE2, 24, f'Lifes - {LIFES}', WHITE, pos_x=50, pos_y=self.ix_pos+10)
+        create_draw_text(screen, SPACE2, 24, 'Meteors Dodged - 0' , WHITE, pos_x=240, pos_y=self.ix_pos+10)
+        create_draw_text(screen, SPACE2, 24, 'Score - 0', WHITE, pos_x=580, pos_y=self.ix_pos+10)
         screen.blit(self.ship_img, (self.ix_pos, 276))
 
         if self.ix_pos == 0:
-            create_draw_text(screen, SPACE2, 54, 'READY?', WHITE, position='closecenterup', width=WIDTH, height=HEIGHT)
-            self._blink_message(screen, SPACE, 16, 'Press < SPACE > to start', WHITE, position='center')
+            create_draw_text(screen, SPACE2, 54, 'READY?', WHITE, position='closecenterup')
+            self._blink_message(screen, SPACE2, 24, 'Press < SPACE > to start', WHITE, position='center')
 
         if self.ix_pos != 0:
             if self.ticks >= 85:
@@ -247,10 +366,9 @@ class Level1(LevelScene):
         if self.ship.state == STATES['HIDDEN']:
             # Level Finished
             self.ship._prepare_ship()
-            self._end_update_score()
             self.bg_sound.stop()
             self.switchToScene(Level2('MARS', 2, GameOver(), self.score, self.ship.lifes))
-        if event.key == pg.K_p:
+        if event.key == pg.K_p and self.ship.state == STATES['ALIVE']:
             # Pause Menu
             reset = self.pause_screen.on_pause(screen)
             if reset:
@@ -274,13 +392,12 @@ class Level2(AdvancedLevelScene):
         if self.ship.state == STATES['HIDDEN']:
             # Level Finished
             self.ship._prepare_ship()
-            self._end_update_score()
             self.bg_sound.stop()
             if BBDD().check_new_record(self.score):
                 self.switchToScene(NewRecord(self.score)) # <- Scene Next Level/Records
             else:
                 self.switchToScene(TitleScene())
-        if event.key == pg.K_p:
+        if event.key == pg.K_p and self.ship.state == STATES['ALIVE']:
             # Pause Menu
             reset = self.pause_screen.on_pause(screen)
             if reset:
@@ -301,25 +418,25 @@ class BlackScene(Scene):
         self.level = level_playing
         self.remaining_lifes = lifes
 
-    def update(self, screen, dt):
-        screen.fill(BLACK)
-
-        create_draw_text(screen, SPACE2, 32, f'Level - {self.level}', WHITE, position='closecenterup', width=WIDTH, height=HEIGHT)
-        create_draw_text(screen, SPACE, 16, 'Lifes - ', WHITE, position='closecenterleft', width=WIDTH, height=HEIGHT)
-
-        x_pos_lifes = 0
-        for life in range(self.remaining_lifes):
-            screen.blit(self.ship_img, ((WIDTH/2-(self.ship_rect.w/2))+x_pos_lifes, HEIGHT/2-(self.ship_rect.w/2)))
-            x_pos_lifes += self.ship_rect.wç
-
-        self._blink_message(screen, SPACE, 16, 'Press < SPACE > to start', WHITE, position='bottomcenter')
-
-        pg.display.flip()
-
     def _keydown_events(self, event, screen):
         Scene._keydown_events(self, event, screen)
         if event.key == pg.K_SPACE:
             self.switchToScene(self.last_scene)
+
+    def update(self, screen, dt):
+        screen.fill(BLACK)
+
+        create_draw_text(screen, SPACE2, 32, f'Level - {self.level}', WHITE, position='closecenterup')
+        create_draw_text(screen, SPACE, 16, 'Lifes - ', WHITE, position='closecenterleft')
+
+        x_pos_lifes = 0
+        for life in range(self.remaining_lifes):
+            screen.blit(self.ship_img, ((WIDTH/2-(self.ship_rect.w/2))+x_pos_lifes, HEIGHT/2-(self.ship_rect.w/2)))
+            x_pos_lifes += self.ship_rect.w
+
+        self._blink_message(screen, SPACE, 16, 'Press < SPACE > to start', WHITE, position='bottomcenter')
+
+        pg.display.flip()
 
 class GameOver(Scene):
 
@@ -335,9 +452,9 @@ class GameOver(Scene):
         screen.fill(BLACK)
         self.ticks += dt
         
-        create_draw_text(screen, SPACE2, 64, 'GAME OVER', WHITE, position='center', width=WIDTH, height=HEIGHT)
+        create_draw_text(screen, SPACE2, 64, 'GAME OVER', WHITE, position='center')
         
-        self._blink_message(screen, SPACE, 16, 'Press < SPACE > to Main Menu', WHITE, position='bottomcenter')
+        self._blink_message(screen, SPACE2, 24, 'Press < SPACE > to Main Menu', WHITE, position='bottomcenter')
         
         pg.display.flip()
 
@@ -379,7 +496,7 @@ class NewRecord(Scene):
         self.ticks += dt
         screen.fill(BLACK)
 
-        create_draw_text(screen, SPACE2, 54, 'NEW RECORD!', WHITE, position='topcenter', width=WIDTH, height=HEIGHT)
+        create_draw_text(screen, SPACE2, 54, 'NEW RECORD!', WHITE, position='topcenter')
         create_draw_text(screen, SPACE2, 42, 'SCORE :', WHITE, pos_x=220, pos_y=220)
         create_draw_text(screen, SPACE2, 42, str(self.record), WHITE, pos_x=400, pos_y=220)
         create_draw_text(screen, SPACE2, 32, 'INSERT YOUR NAME HERE :', WHITE, pos_x=180, pos_y=320)
@@ -409,4 +526,5 @@ class NewRecord(Scene):
                     self._blink_message(screen, SPACE2, 26, 'Press < SPACE > to enter your record', WHITE, position='bottomcenter')
 
                 else: # Record saved
+                    create_draw_text(screen, SPACE2, 26, 'RECORD ADDED SUCCESFULLY!', RED, pos_x=200, pos_y=400)
                     self._blink_message(screen, SPACE2, 26, 'Press < SPACE > to go to main menu', WHITE, position='bottomcenter')

@@ -68,36 +68,35 @@ class LevelScene(Scene):
         self.planet_x = 0 # For movement planet end level
         self.planet_name = planet_name
 
-        self.ticks = 0
-
         self.score = 0
         self.meteors_dodged = 0
         self.level = level
-
-        self.bonus_score = 0
+        self.added_bonus_landing = False
+        self.added_bonus_lifes = False
 
     def _keydown_events(self, event, screen):
         Scene._keydown_events(self, event, screen)
         if event.key == pg.K_SPACE: 
             # Click for rotate ship
-            if self.ship.state == STATES['ALIVE']\
-                and self.meteors_dodged >= METEORS_TO_DODGE\
-                and self.planet_x == 272 and self.ship.rect.top >= 200\
-                and self.ship.rect.top <= 300:
+            if self.ship.state == STATES['ALIVE'] and self.meteors_dodged >= METEORS_TO_DODGE\
+                and self.planet_x == 272 and self.ship.rect.top >= 70 and self.ship.rect.bottom <= 580:
 
                 self.ship.state = STATES['ROTATING']
             # Click for land
             if self.ship.state == STATES['PREPARED TO LAND']\
-                and self.ship.rect.top >= 200:
+                and self.ship.rect.top >= 180 and self.ship.rect.bottom <= 420:
 
                 self.ship.state = STATES['LANDING']
+
     def update(self, screen, dt):
+
+        self.ticks += dt
 
         self._add_meteors(dt)
 
         self._move_background(screen)
         self._top_level_menu(screen)
-        self._draw_planet(screen, dt)
+        self._draw_planet(screen, dt) # Drawing planet at the end of level
         screen.blit(self.ship.image, (self.ship.rect.x, self.ship.rect.y))
         self.meteors.draw(screen)
         self._end_level_msg(screen, dt)
@@ -143,8 +142,8 @@ class LevelScene(Scene):
         for meteor in self.meteors:
             if meteor.rect.right <= 0:
                 self.meteors.remove(meteor)
+                self.score += meteor.points
                 if self.meteors_dodged < METEORS_TO_DODGE:
-                    self.score += meteor.points
                     self.meteors_dodged += 1
 
     def _move_background(self, screen):
@@ -171,9 +170,9 @@ class LevelScene(Scene):
     def _top_level_menu(self, screen):
         top_level_img, top_level_img_rect = load_image(IMAGES_FOLDER, 'score1.png')
 
-        create_draw_text(screen, SPACE, 16, f'Lifes - {self.ship.lifes}', WHITE, pos_x=50, pos_y=15)
-        create_draw_text(screen, SPACE, 16, f'Meteors Dodged - {self.meteors_dodged}', WHITE, pos_x=240, pos_y=15)
-        create_draw_text(screen, SPACE, 16, f'Score - {self.score}', WHITE, pos_x=580, pos_y=15)
+        create_draw_text(screen, SPACE2, 24, f'Lifes - {self.ship.lifes}', WHITE, pos_x=50, pos_y=10)
+        create_draw_text(screen, SPACE2, 24, f'Meteors Dodged - {self.meteors_dodged}', WHITE, pos_x=240, pos_y=10)
+        create_draw_text(screen, SPACE2, 24, f'Score - {self.score}', WHITE, pos_x=580, pos_y=10)
         
         screen.blit(top_level_img, (0, 0))
 
@@ -194,56 +193,53 @@ class LevelScene(Scene):
 
         if self.planet_x >= 270:
             if self.ship.state == STATES['ALIVE']:
-                create_draw_text(screen, SPACE, 16, 'Press < SPACE > to rotate the ship', WHITE, position='topcenter', width=WIDTH)
+                self._add_lifes_bonus()
+                create_draw_text(screen, SPACE2, 24, 'Press < SPACE > to rotate the ship', WHITE, position='topcenter')
             if self.ship.state == STATES['ROTATING']:
-                create_draw_text(screen, SPACE, 16, 'Rotating ship, please, wait...', WHITE, position='topcenter', width=WIDTH)
+                create_draw_text(screen, SPACE2, 24, 'Rotating ship, please wait...', WHITE, position='topcenter')
             if self.ship.state == STATES['PREPARED TO LAND']:
-                create_draw_text(screen, SPACE, 16, 'Press < SPACE > to land', WHITE, position='topcenter', width=WIDTH)
+                create_draw_text(screen, SPACE2, 24, 'Press < SPACE > to land', WHITE, position='topcenter')
             if self.ship.state == STATES['LANDING']:
-                create_draw_text(screen, SPACE, 16, 'Landing, please, wait...', WHITE, position='topcenter', width=WIDTH)
+                create_draw_text(screen, SPACE2, 24, 'Landing, please wait...', WHITE, position='topcenter')
         else:
             if self.ship.state == STATES['LANDED']:
                 self._landing_msg(screen)
 
             if self.ship.state == STATES['HIDDEN']:
                 
-                create_draw_text(screen, SPACE2, 54, f'{self.planet_name} CONQUERED!', WHITE, position='center', width=WIDTH, height=HEIGHT)
+                # self.ticks += dt
 
-                self.ticks += dt
-
-                if self.ticks <= 500:
-                    create_draw_text(screen, SPACE, 16, 'Press < SPACE > to continue', WHITE, position='bottomcenter', width=WIDTH, height=HEIGHT)
-                elif self.ticks <= 1000:
-                    pass
-                else:
-                    self.ticks = 0
+                create_draw_text(screen, SPACE2, 54, f'{self.planet_name} CONQUERED!', WHITE, position='center')
+                self._blink_message(screen, SPACE2, 24, 'Press < SPACE > to continue', WHITE, position='bottomcenter')
 
     def _landing_msg(self, screen):
-        if self.ship.rect.top >= 260 and self.ship.rect.top <= 280:
+        if self.ship.rect.top >= 260 and self.ship.rect.bottom <= 340:
             pos_land_msg = 'PERFECT'
-            if not self.bonus_score:    
-                self.bonus_score += 1000
-        elif self.ship.rect.top >= 240 and self.ship.rect.top <= 280:
+            if not self.added_bonus_landing:    
+                self.score += 1000
+                self.added_bonus_landing = True
+        elif self.ship.rect.top >= 220 and self.ship.rect.bottom <= 380:
             pos_land_msg = 'SUCCESFULLY'
-            if not self.bonus_score:
-                self.bonus_score += 500
+            if not self.added_bonus_landing:
+                self.score += 500
+                self.added_bonus_landing = True
         else:
             pos_land_msg = 'NOT BAD'
-            if not self.bonus_score:
-                self.bonus_score += 250
-        create_draw_text(screen, SPACE, 26, f'{pos_land_msg} LANDED!', WHITE, position='topcenter', width=WIDTH)
+            if not self.added_bonus_landing:
+                self.score += 250
+                self.added_bonus_landing = True
 
-    def _add_bonus_to_score(self):
-        if self.ship.lifes == 3:
-            self.bonus_score += 1000
-        elif self.ship.lifes == 2:
-            self.bonus_score += 500
-        else:
-            self.bonus_score += 250
+        create_draw_text(screen, SPACE2, 34, f'{pos_land_msg} LANDED!', WHITE, position='topcenter')
 
-    def _end_update_score(self):
-        self._add_bonus_to_score()
-        self.score += self.bonus_score
+    def _add_lifes_bonus(self):
+        if not self.added_bonus_lifes:
+            if self.ship.lifes == 3:
+                self.score += 1000
+            elif self.ship.lifes == 2:
+                self.score += 500
+            else:
+                self.score += 250
+            self.added_bonus_lifes = True
 
     def _reset(self):
         self.meteors.empty()

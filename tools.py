@@ -5,7 +5,7 @@ Tools for help to load and draw some stuff
 import pygame as pg
 
 import os
-# pg.init()
+
 # IMAGES TOOLS
 
 def load_image(path, img, x=0, y=0, rect=True):
@@ -41,7 +41,7 @@ def load_and_draw_image(screen, path, img, x=0, y=0):
 
 # TEXT TOOLS
 
-def create_draw_text(screen, font, size, text, color, position='', pos_x=0, pos_y=0, width=0, height=0, antialias=True):
+def create_draw_text(screen, font, size, text, color, position='', pos_x=0, pos_y=0, width=800, height=600, antialias=True):
     '''
     Function that draws text on the screen
     screen = the surface where we want to draw the text
