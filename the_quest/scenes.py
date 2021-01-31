@@ -209,7 +209,7 @@ class HowToPlay2(Scene):
         create_draw_text(screen, SPACE2, 16, 'PERFECT LANDING', GREEN, pos_x=25 ,pos_y=(HEIGHT/2)-47)
         create_draw_text(screen, SPACE2, 16, 'SUCCESSFULLY LANDING', ORANGE, pos_x=25 ,pos_y=(HEIGHT/2)-87)
         create_draw_text(screen, SPACE2, 16, 'NOT BAD LANDING', RED, pos_x=25 ,pos_y=(HEIGHT/2)-127)
-    
+
 class HowToPlay3(Scene):
 
     def __init__(self):
@@ -396,7 +396,7 @@ class Level2(AdvancedLevelScene):
             if BBDD().check_new_record(self.score):
                 self.switchToScene(NewRecord(self.score)) # <- Scene Next Level/Records
             else:
-                self.switchToScene(TitleScene())
+                self.switchToScene(NoRecord())
         if event.key == pg.K_p and self.ship.state == STATES['ALIVE']:
             # Pause Menu
             reset = self.pause_screen.on_pause(screen)
@@ -528,3 +528,22 @@ class NewRecord(Scene):
                 else: # Record saved
                     create_draw_text(screen, SPACE2, 26, 'RECORD ADDED SUCCESFULLY!', RED, pos_x=200, pos_y=400)
                     self._blink_message(screen, SPACE2, 26, 'Press < SPACE > to go to main menu', WHITE, position='bottomcenter')
+
+class NoRecord(Scene):
+
+    def __init__(self):
+        Scene.__init__(self)
+
+    def _keydown_events(self, event, screen):
+        Scene._keydown_events(self, event, screen)
+        if event.key == pg.K_SPACE:
+            self.switchToScene(TitleScene())
+
+    def update(self, screen, dt):
+        self.ticks += dt
+        screen.fill(BLACK)
+
+        create_draw_text(screen, SPACE2, 54, 'NO RECORD HAS BEEN BEATED', WHITE, position='topcenter')
+        self._blink_message(screen, SPACE2, 26, 'Press < SPACE > to go to main menu', WHITE, position='bottomcenter')
+
+        pg.display.flip()
