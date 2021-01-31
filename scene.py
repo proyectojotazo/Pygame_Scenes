@@ -89,9 +89,7 @@ class LevelScene(Scene):
                 self.ship.state = STATES['LANDING']
 
     def update(self, screen, dt):
-
         self.ticks += dt
-
         self._add_meteors(dt)
 
         self._move_background(screen)
@@ -128,7 +126,6 @@ class LevelScene(Scene):
         to add meteors, else, we continue adding meteors
         '''
         if self.meteors_dodged < METEORS_TO_DODGE:
-            self.ticks += dt
             if self.ticks >= 85:
                 if len(self.meteors) <= MAX_METEORS:
                     self.meteors.add(Meteor())

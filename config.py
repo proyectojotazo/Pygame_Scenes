@@ -85,4 +85,4 @@ SELECTED_SOUND = load_sound(SOUNDS_FOLDER, 'option-selected.wav')
 SELECTED_SOUND.set_volume(0.02)
 
 # Sounds Settings
-BACKGROUND_VOL = 0.1
+BACKGROUND_VOL = 0.05

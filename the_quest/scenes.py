@@ -12,40 +12,42 @@ from the_quest.sprites import *
 from the_quest.optional_screens import *
 
 class InitialAnimation(Scene):
-
+    '''
+    Class for show initial animation of Title
+    '''
     def __init__(self):
         Scene.__init__(self)
 
-        self.x_pos_ship = 800
+        self.x_pos_ship = 800 # For the movement of ship
         self.y_pos_ship = 110
-        self.x_pos_title = 848
+        self.x_pos_title = 848 # For the movement of Title
         self.y_pos_title = 75
-
-        self.ticks = 0
 
     def update(self, screen, dt):
         screen.fill(BLACK)
 
-        self.ticks += dt
-
         load_and_draw_image(screen, SHIP_FOLDER, 'ship-title.png', x=self.x_pos_ship, y=self.y_pos_ship)
         create_draw_text(screen, TITLE, 120, 'THE QUEST', WHITE, pos_x=self.x_pos_title, pos_y=self.y_pos_title)
 
-        
         self.x_pos_ship -= 5
         if self.x_pos_title > 68.0:
             self.x_pos_title -= 5
         if self.x_pos_ship <= -60:
+            # When title is on position we switch to TitleScene
             self.switchToScene(TitleScene())
         
         pg.display.flip()
 
 class TitleScene(Scene):
+    '''
+    Class who draws the TitleScene
+    '''
     def __init__(self):
         Scene.__init__(self)
 
         self.option = 0
 
+        # Title Music
         self.title_sound = load_sound(SOUNDS_FOLDER, 'title-screen.wav')
         self.title_sound.set_volume(BACKGROUND_VOL)
         self.title_sound.play()
@@ -65,18 +67,21 @@ class TitleScene(Scene):
             self._check_op()
 
     def _check_op(self):
+        '''
+        Method to know which option was choosed.
+        We switch to that Scene
+        '''        
         if self.option == 0:
             # Start New Game
             self.title_sound.stop()
-            self.switchToScene(Fade())
+            self.switchToScene(Fade(load_image(IMAGES_FOLDER, 'background.png', rect=False), Transition(Level1('JUPITER', 1, GameOver()), 3, 0)))
         elif self.option == 1:
             # How To Play Screen
             self.title_sound.stop()
             self.switchToScene(HowToPlay())
-            pass        
         elif self.option == 2:
             self.title_sound.stop()
-            self.switchToScene(Records(5))
+            self.switchToScene(Records())
         else:
             # Exit Game
             self.terminateScene()
@@ -101,6 +106,9 @@ class TitleScene(Scene):
                 create_draw_text(screen, SPACE2, 36, text[x], WHITE, position=pos[x])
 
 class HowToPlay(Scene):
+    '''
+    Class To show How To Play page 1
+    '''
     def __init__(self):
         Scene.__init__(self)
 
@@ -112,9 +120,7 @@ class HowToPlay(Scene):
             self.switchToScene(HowToPlay2())
 
     def update(self, screen, dt):
-
         self.ticks += dt
-
         screen.fill(BLACK)
         
         self._draw_main_text(screen)
@@ -143,7 +149,9 @@ class HowToPlay(Scene):
         create_draw_text(screen, SPACE2, 24, 'Quit the game', WHITE, pos_x=520, pos_y=380)
 
 class HowToPlay2(Scene):
-    
+    '''
+    Class To show How To Play page 2
+    '''
     def __init__(self):
         Scene.__init__(self)
         self.bg_img = load_image(IMAGES_FOLDER, 'background.png', rect=False)
@@ -211,7 +219,9 @@ class HowToPlay2(Scene):
         create_draw_text(screen, SPACE2, 16, 'NOT BAD LANDING', RED, pos_x=25 ,pos_y=(HEIGHT/2)-127)
 
 class HowToPlay3(Scene):
-
+    '''
+    Class To show How To Play page 3
+    '''
     def __init__(self):
         Scene.__init__(self)
 
@@ -223,9 +233,7 @@ class HowToPlay3(Scene):
             self.switchToScene(HowToPlay2())
 
     def update(self, screen, dt):
-
         self.ticks += dt
-
         screen.fill(BLACK)
 
         self._draw_main_text(screen)
@@ -254,11 +262,12 @@ class HowToPlay3(Scene):
         create_draw_text(screen, SPACE2, 20, '1 LIFE = 250 pts', RED, pos_x=330, pos_y=410)
 
 class Records(Scene):
-
-    def __init__(self, score):
+    '''
+    Class To show Records
+    '''
+    def __init__(self):
         Scene.__init__(self)
 
-        self.score = score
         BBDD()._set_records_to_five()
 
     def _keydown_events(self, event, screen):
@@ -269,8 +278,8 @@ class Records(Scene):
             BBDD().reset_records()
 
     def update(self, screen, dt):
-        self.ticks += dt
         screen.fill(BLACK)
+
         # Draws static text
         create_draw_text(screen, SPACE2, 20, 'Press R to reset records', WHITE, pos_x=10, pos_y=10)
         create_draw_text(screen, SPACE2, 54, 'RECORDS', WHITE, position='topcenter')
@@ -278,6 +287,7 @@ class Records(Scene):
         create_draw_text(screen, SPACE2, 28, 'SCORE', WHITE, pos_x=340, pos_y=180)
         create_draw_text(screen, SPACE2, 28, 'NAME', WHITE, pos_x=550, pos_y=180)
 
+        # Records stored in our database
         records = BBDD().get_dict_records(BBDD()._select_records())
 
         # Draws records
@@ -293,18 +303,26 @@ class Records(Scene):
         pg.display.flip()
 
 class Fade(Scene):
-    # TODO: Class Fade for fade into more levels
-    def __init__(self):
+    '''
+    Class to makes the fade from one scene to another
+    next_level_bg = we indicate the background of next level
+    to make a soft fade, only if its a fade to a level game, 
+    else, we indicate as None
+    next_scene = to indicate the next scene after the fade
+    effect
+    '''
+    def __init__(self, next_level_bg, next_scene):
         Scene.__init__(self)
         self.fade = pg.Surface((WIDTH, HEIGHT))
-        self.fade.fill((BLACK))
-        self.bg_img = load_image(IMAGES_FOLDER, 'background.png', rect=False)
+        self.fade.fill(BLACK)
+        self.nxt_lvl_bg = next_level_bg
+        self.next_scene = next_scene
 
     def update(self, screen, dt):
         
         self._fade_out(screen)
         self._fade_in(screen)
-        self.switchToScene(StartingGame())
+        self.switchToScene(self.next_scene)
 
     def _fade_out(self, screen):
         for alpha in range(0, 255):
@@ -316,32 +334,44 @@ class Fade(Scene):
     def _fade_in(self, screen):
         for alpha in range(255, 0, -1):
             self.fade.set_alpha(alpha)
-            screen.blit(self.bg_img, (0,0))
+            if self.nxt_lvl_bg:
+                screen.blit(self.nxt_lvl_bg, (0,0))
+            else:
+                screen.blit(self.fade, (0,0))
             screen.blit(self.fade, (0,0))
             pg.display.flip()
             pg.time.delay(5)
 
-class StartingGame(Scene):
-
-    def __init__(self):
+class Transition(Scene):
+    '''
+    Class who makes the animation of top level and ship appears
+    at same time
+    next_level = indicates the next level to start
+    lifes = to show in top level the remaining lifes if isn't the
+    first level
+    score = same as lifes
+    '''
+    def __init__(self, next_level, lifes, score):
         Scene.__init__(self)
         self.ship_img, self.ship_rect = load_image(SHIP_FOLDER, 'ship.png')
         self.ix_pos = -50
+        self.next_level = next_level
+        self.lifes = lifes
+        self.score = score
 
     def _keydown_events(self, event, screen):
         Scene._keydown_events(self, event, screen)
         if event.key == pg.K_SPACE and self.ix_pos == 0:
-            self.switchToScene(Level1('JUPITER', 1, GameOver()))
+            self.switchToScene(self.next_level)
 
     def update(self, screen, dt):
-        
         self.ticks += dt
 
         load_and_draw_image(screen, IMAGES_FOLDER, 'background.png')
         load_and_draw_image(screen, IMAGES_FOLDER, 'score1.png', y=self.ix_pos)
-        create_draw_text(screen, SPACE2, 24, f'Lifes - {LIFES}', WHITE, pos_x=50, pos_y=self.ix_pos+10)
+        create_draw_text(screen, SPACE2, 24, f'Lifes - {self.lifes}', WHITE, pos_x=50, pos_y=self.ix_pos+10)
         create_draw_text(screen, SPACE2, 24, 'Meteors Dodged - 0' , WHITE, pos_x=240, pos_y=self.ix_pos+10)
-        create_draw_text(screen, SPACE2, 24, 'Score - 0', WHITE, pos_x=580, pos_y=self.ix_pos+10)
+        create_draw_text(screen, SPACE2, 24, f'Score - {self.score}', WHITE, pos_x=580, pos_y=self.ix_pos+10)
         screen.blit(self.ship_img, (self.ix_pos, 276))
 
         if self.ix_pos == 0:
@@ -356,7 +386,14 @@ class StartingGame(Scene):
         pg.display.flip()
 
 class Level1(LevelScene):
-
+    '''
+    Class for first level of game
+    planet_name = name of our image for load and for use at the end 
+    of level for show which planet we conquered
+    level = for blackscreen who needs to know which level he has
+    to show(see "optional_screens - BlackScreen()")
+    go_scene = GameOver scene if ship state is "DEAD"
+    '''
     def __init__(self, planet_name, level, go_scene):
         LevelScene.__init__(self, planet_name, level, go_scene)
 
@@ -367,13 +404,17 @@ class Level1(LevelScene):
             # Level Finished
             self.ship._prepare_ship()
             self.bg_sound.stop()
-            self.switchToScene(Level2('MARS', 2, GameOver(), self.score, self.ship.lifes))
+            self.switchToScene(Fade(load_image(IMAGES_FOLDER, 'background.png', rect=False), (Transition(Level2('MARS', 2, GameOver(), self.score, self.ship.lifes), self.ship.lifes, self.score))))
+
         if event.key == pg.K_p and self.ship.state == STATES['ALIVE']:
             # Pause Menu
+            pg.mixer.pause()
             reset = self.pause_screen.on_pause(screen)
             if reset:
+                pg.mixer.stop()
                 self._reset(all_data=True)
-                self.switchToScene(StartingGame())
+                self.switchToScene(Transition(Level1('JUPITER', 1, GameOver()), self.ship.lifes, self.score))
+            pg.mixer.unpause()
     
     def _reset(self, all_data=False):
         LevelScene._reset(self)
@@ -382,11 +423,21 @@ class Level1(LevelScene):
             self.ship.lifes = LIFES
 
 class Level2(AdvancedLevelScene):
+    '''
+    Class for second level of game
+    score = for add the last score from last level
+    lifes = same as score
+    '''
 
     def __init__(self, planet_img, level, go_scene, score, lifes):
         AdvancedLevelScene.__init__(self, planet_img, level, go_scene, score, lifes)
 
     def _keydown_events(self, event, screen):
+        '''
+        We check if our final score is better than our database
+        records scores. If beats anyone of them, we will switch
+        to NewRecord scene, else, to NoRecord scene
+        '''
         LevelScene._keydown_events(self, event, screen)
         # Click for finish level
         if self.ship.state == STATES['HIDDEN']:
@@ -394,15 +445,18 @@ class Level2(AdvancedLevelScene):
             self.ship._prepare_ship()
             self.bg_sound.stop()
             if BBDD().check_new_record(self.score):
-                self.switchToScene(NewRecord(self.score)) # <- Scene Next Level/Records
+                self.switchToScene(Fade(None, NewRecord(self.score))) # <- Scene Next Level/Records
             else:
-                self.switchToScene(NoRecord())
+                self.switchToScene(Fade(None, NoRecord()))
         if event.key == pg.K_p and self.ship.state == STATES['ALIVE']:
             # Pause Menu
+            pg.mixer.pause()
             reset = self.pause_screen.on_pause(screen)
             if reset:
+                pg.mixer.stop()
                 self._reset(all_data=True)
-                self.switchToScene(Level2('MARS', 2, GameOver(), self.score, self.ship.lifes))
+                self.switchToScene(Transition(Level2('MARS', 2, GameOver(), self.score, self.ship.lifes), self.ship.lifes, self.score))
+            pg.mixer.unpause()
     
     def _reset(self, all_data=False):
         AdvancedLevelScene._reset(self)
@@ -424,6 +478,7 @@ class BlackScene(Scene):
             self.switchToScene(self.last_scene)
 
     def update(self, screen, dt):
+        self.ticks += dt
         screen.fill(BLACK)
 
         create_draw_text(screen, SPACE2, 32, f'Level - {self.level}', WHITE, position='closecenterup')
@@ -439,6 +494,9 @@ class BlackScene(Scene):
         pg.display.flip()
 
 class GameOver(Scene):
+    '''
+    Class who draws GameOver scene
+    '''
 
     def __init__(self):
         Scene.__init__(self)
@@ -449,8 +507,9 @@ class GameOver(Scene):
             self.switchToScene(TitleScene())
 
     def update(self, screen, dt):
-        screen.fill(BLACK)
         self.ticks += dt
+
+        screen.fill(BLACK)
         
         create_draw_text(screen, SPACE2, 64, 'GAME OVER', WHITE, position='center')
         
@@ -459,6 +518,9 @@ class GameOver(Scene):
         pg.display.flip()
 
 class NewRecord(Scene):
+    '''
+    Class who draws the NewRecord scene
+    '''
 
     def __init__(self, score):
         Scene.__init__(self)
@@ -468,7 +530,7 @@ class NewRecord(Scene):
         self.options = dict(zip(n, l))
 
         self.sel_option = 1
-        self.l = []
+        self.l = [] # For store the letters we put in NewRecord
 
         self.record = score
         self.recorded = False
@@ -477,8 +539,10 @@ class NewRecord(Scene):
         Scene._keydown_events(self, event, screen)
         if event.key == pg.K_UP and self.sel_option > 1:
             self.sel_option -= 1
+            OPTION_SOUND.play()
         if event.key == pg.K_DOWN and self.sel_option < 26:
             self.sel_option += 1
+            OPTION_SOUND.play()
         if event.key == pg.K_SPACE: 
             if len(self.l) != 3:
                 self.l.append(self.options[self.sel_option])
@@ -486,14 +550,17 @@ class NewRecord(Scene):
             else:
                 if not self.recorded:
                     name = ''.join(self.l)
+                    # Inserting new record
                     BBDD().insert_new_record((self.record, name))
                     self.recorded = True
                 else:
                     self.switchToScene(TitleScene())
+            SELECTED_SOUND.play()
 
 
     def update(self, screen, dt):
         self.ticks += dt
+
         screen.fill(BLACK)
 
         create_draw_text(screen, SPACE2, 54, 'NEW RECORD!', WHITE, position='topcenter')
@@ -530,7 +597,9 @@ class NewRecord(Scene):
                     self._blink_message(screen, SPACE2, 26, 'Press < SPACE > to go to main menu', WHITE, position='bottomcenter')
 
 class NoRecord(Scene):
-
+    '''
+    Class who draws the NoRecord scene
+    '''
     def __init__(self):
         Scene.__init__(self)
 

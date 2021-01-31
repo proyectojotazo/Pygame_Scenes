@@ -72,7 +72,6 @@ class PauseScreen:
         Mainloop of Pause
         '''
         self.reset = False
-        pg.mixer.pause()
         while self.paused:
             self._handle_events()
             self._draw_paused_menu(self.option, screen)
@@ -118,7 +117,6 @@ class PauseScreen:
         '''
         if option == 0:
             self.paused = False
-            pg.mixer.unpause()
         if option == 1:
             self.paused = False
             self.reset = True
