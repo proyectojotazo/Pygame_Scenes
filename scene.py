@@ -32,6 +32,9 @@ class Scene:
         pass
 
     def _blink_message(self, screen, font, size, text, color, position, width=WIDTH, height=HEIGHT, antialias=True):
+        '''
+        Draws a blink message on the screen
+        '''
         if self.ticks <= 1000:
             create_draw_text(screen, font, size, text, color, position=position, width=width, height=height, antialias=antialias)
         elif self.ticks <=1500:

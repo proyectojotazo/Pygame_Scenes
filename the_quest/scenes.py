@@ -26,7 +26,7 @@ class InitialAnimation(Scene):
     def update(self, screen, dt):
         screen.fill(BLACK)
 
-        load_and_draw_image(screen, SHIP_FOLDER, 'ship-title.png', x=self.x_pos_ship, y=self.y_pos_ship)
+        load_and_draw_image(screen, SHIP_FOLDER, 'ship1-left.png', x=self.x_pos_ship, y=self.y_pos_ship)
         create_draw_text(screen, TITLE, 120, 'THE QUEST', WHITE, pos_x=self.x_pos_title, pos_y=self.y_pos_title)
 
         self.x_pos_ship -= 5
@@ -155,7 +155,7 @@ class HowToPlay2(Scene):
     def __init__(self):
         Scene.__init__(self)
         self.bg_img = load_image(IMAGES_FOLDER, 'background.png', rect=False)
-        self.ship_img, self.ship_rect = load_image(SHIP_FOLDER, 'ship.png')
+        self.ship_img, self.ship_rect = load_image(SHIP_FOLDER, 'ship1.png')
         self.planet = load_image(IMAGES_FOLDER, 'JUPITER.png', rect=False)
 
     def _keydown_events(self, event, screen):
@@ -278,6 +278,7 @@ class Records(Scene):
             BBDD().reset_records()
 
     def update(self, screen, dt):
+        self.ticks += dt
         screen.fill(BLACK)
 
         # Draws static text
@@ -307,7 +308,7 @@ class Fade(Scene):
     Class to makes the fade from one scene to another
     next_level_bg = we indicate the background of next level
     to make a soft fade, only if its a fade to a level game, 
-    else, we indicate as None
+    else, we indicate as None and we use fade surface
     next_scene = to indicate the next scene after the fade
     effect
     '''
@@ -353,7 +354,7 @@ class Transition(Scene):
     '''
     def __init__(self, next_level, lifes, score):
         Scene.__init__(self)
-        self.ship_img, self.ship_rect = load_image(SHIP_FOLDER, 'ship.png')
+        self.ship_img, self.ship_rect = load_image(SHIP_FOLDER, 'ship1.png')
         self.ix_pos = -50
         self.next_level = next_level
         self.lifes = lifes
@@ -468,7 +469,7 @@ class BlackScene(Scene):
     def __init__(self, last_scene, level_playing, lifes):
         Scene.__init__(self)
         self.last_scene = last_scene
-        self.ship_img, self.ship_rect = load_image(SHIP_FOLDER, 'ship.png')
+        self.ship_img, self.ship_rect = load_image(SHIP_FOLDER, 'ship1.png')
         self.level = level_playing
         self.remaining_lifes = lifes
 

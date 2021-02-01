@@ -14,7 +14,7 @@ class Ship(pg.sprite.Sprite):
     def __init__(self):
         pg.sprite.Sprite.__init__(self)
 
-        self.image, self.rect = load_image(SHIP_FOLDER, 'ship.png', y=276)
+        self.image, self.rect = load_image(SHIP_FOLDER, 'ship1.png', y=276)
 
         self.selected_expl_img = 0
         self.speed_explosion = 0
@@ -82,7 +82,7 @@ class Ship(pg.sprite.Sprite):
         '''
 
         if self.selected_expl_img >= 8:
-            img = load_image(SHIP_FOLDER, 'ship.png', rect=False)
+            img = load_image(SHIP_FOLDER, 'ship1.png', rect=False)
             self.selected_expl_img = 0
             self.lifes -= 1
             self.state = STATES['NOT ALIVE']
@@ -101,7 +101,7 @@ class Ship(pg.sprite.Sprite):
         Method who makes the ship rotation
         '''
         if self.angle <= 180:
-            rotated_img = pg.transform.rotozoom(load_image(SHIP_FOLDER, 'ship.png', rect=False), self.angle, 1)
+            rotated_img = pg.transform.rotozoom(load_image(SHIP_FOLDER, 'ship1.png', rect=False), self.angle, 1)
             rect_rotated_img = rotated_img.get_rect(center=(self.rect.centerx, self.rect.centery))
             self.image = rotated_img
             self.rect = rect_rotated_img
@@ -132,7 +132,7 @@ class Ship(pg.sprite.Sprite):
         Prepare the ship for next level
         '''
         self.rect.x = 2
-        self.image = load_image(SHIP_FOLDER, 'ship.png', rect=False)
+        self.image = load_image(SHIP_FOLDER, 'ship1.png', rect=False)
         self.angle = 0
 
 class Meteor(pg.sprite.Sprite):
@@ -160,7 +160,7 @@ class Meteor(pg.sprite.Sprite):
         '''
         self.rect.x -= self.vx
         # Maybe not?
-        # self._rotate()
+        self._rotate()
 
     def _rotate(self):
         '''
