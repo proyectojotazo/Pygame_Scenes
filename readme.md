@@ -39,6 +39,4 @@
 
     - Open your terminal, and directly, use `pip install pygame`
 
-- Next step. We need to create a **data** folder to store the database records. Create a new folder called **data** in main folder
-
 - Final step, run the file **screen.py** for play the game, and enjoy it!
