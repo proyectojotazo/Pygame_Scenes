@@ -27,7 +27,7 @@
       (<name_VE>) C:/...
       ```
 
-      - (LINUX/MAC) In your terminal execute `<name_VE>/bin/activate` and you can see if your VE is activated like this:
+      - (LINUX/MAC) In your terminal execute `source <name_VE>/bin/activate` and you can see if your VE is activated like this:
 
       ```bash
       (<name_VE>) $<user_name>:/...
