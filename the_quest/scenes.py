@@ -48,7 +48,7 @@ class TitleScene(Scene):
         self.option = 0
 
         # Title Music
-        self.title_sound = load_sound(SOUNDS_FOLDER, 'title-screen.wav')
+        self.title_sound = TITLE_BG_SOUND
         self.title_sound.set_volume(BACKGROUND_VOL)
         self.title_sound.play()
 
@@ -74,7 +74,7 @@ class TitleScene(Scene):
         if self.option == 0:
             # Start New Game
             self.title_sound.stop()
-            self.switchToScene(Fade(load_image(IMAGES_FOLDER, 'background.png', rect=False), Transition(Level1('JUPITER', 1, GameOver()), 3, 0)))
+            self.switchToScene(Fade(BACKGROUND, Transition(Level1(GameOver()), 3, 0)))
         elif self.option == 1:
             # How To Play Screen
             self.title_sound.stop()
@@ -154,7 +154,7 @@ class HowToPlay2(Scene):
     '''
     def __init__(self):
         Scene.__init__(self)
-        self.bg_img = load_image(IMAGES_FOLDER, 'background.png', rect=False)
+        self.bg_img = BACKGROUND
         self.ship_img, self.ship_rect = load_image(SHIP_FOLDER, 'ship1.png')
         self.planet = load_image(IMAGES_FOLDER, 'JUPITER.png', rect=False)
 
@@ -389,14 +389,12 @@ class Transition(Scene):
 class Level1(LevelScene):
     '''
     Class for first level of game
-    planet_name = name of our image for load and for use at the end 
-    of level for show which planet we conquered
-    level = for blackscreen who needs to know which level he has
-    to show(see "optional_screens - BlackScreen()")
     go_scene = GameOver scene if ship state is "DEAD"
     '''
-    def __init__(self, planet_name, level, go_scene):
-        LevelScene.__init__(self, planet_name, level, go_scene)
+    def __init__(self, go_scene):
+        LevelScene.__init__(self, go_scene)
+        self.planet_name = 'JUPITER'
+        self.planet, self.rect_planet = load_image(IMAGES_FOLDER, f'{self.planet_name}.png', x=WIDTH, y=50)
 
     def _keydown_events(self, event, screen):
         LevelScene._keydown_events(self, event, screen)
@@ -405,7 +403,7 @@ class Level1(LevelScene):
             # Level Finished
             self.ship._prepare_ship()
             self.bg_sound.stop()
-            self.switchToScene(Fade(load_image(IMAGES_FOLDER, 'background.png', rect=False), (Transition(Level2('MARS', 2, GameOver(), self.score, self.ship.lifes), self.ship.lifes, self.score))))
+            self.switchToScene(Fade(BACKGROUND, (Transition(Level2(GameOver(),self.score, self.ship.lifes), self.ship.lifes, self.score))))
 
         if event.key == pg.K_p and self.ship.state == STATES['ALIVE']:
             # Pause Menu
@@ -414,7 +412,7 @@ class Level1(LevelScene):
             if reset:
                 pg.mixer.stop()
                 self._reset(all_data=True)
-                self.switchToScene(Transition(Level1('JUPITER', 1, GameOver()), self.ship.lifes, self.score))
+                self.switchToScene(Transition(Level1(GameOver()), self.ship.lifes, self.score))
             pg.mixer.unpause()
     
     def _reset(self, all_data=False):
@@ -430,8 +428,11 @@ class Level2(AdvancedLevelScene):
     lifes = same as score
     '''
 
-    def __init__(self, planet_img, level, go_scene, score, lifes):
-        AdvancedLevelScene.__init__(self, planet_img, level, go_scene, score, lifes)
+    def __init__(self, go_scene, score, lifes):
+        AdvancedLevelScene.__init__(self, go_scene, score, lifes)
+        self.planet_name = 'MARS'
+        self.planet, self.rect_planet = load_image(IMAGES_FOLDER, f'{self.planet_name}.png', x=WIDTH, y=50)
+        self.level = 2
 
     def _keydown_events(self, event, screen):
         '''
@@ -456,43 +457,13 @@ class Level2(AdvancedLevelScene):
             if reset:
                 pg.mixer.stop()
                 self._reset(all_data=True)
-                self.switchToScene(Transition(Level2('MARS', 2, GameOver(), self.score, self.ship.lifes), self.ship.lifes, self.score))
+                self.switchToScene(Transition(Level2(GameOver(), self.score, self.ship.lifes), self.ship.lifes, self.score))
             pg.mixer.unpause()
     
     def _reset(self, all_data=False):
         AdvancedLevelScene._reset(self)
         if all_data:
             self.ship.lifes = self.remaining_lifes
-
-class BlackScene(Scene):
-    # TODO: Finish and implements in game
-    def __init__(self, last_scene, level_playing, lifes):
-        Scene.__init__(self)
-        self.last_scene = last_scene
-        self.ship_img, self.ship_rect = load_image(SHIP_FOLDER, 'ship1.png')
-        self.level = level_playing
-        self.remaining_lifes = lifes
-
-    def _keydown_events(self, event, screen):
-        Scene._keydown_events(self, event, screen)
-        if event.key == pg.K_SPACE:
-            self.switchToScene(self.last_scene)
-
-    def update(self, screen, dt):
-        self.ticks += dt
-        screen.fill(BLACK)
-
-        create_draw_text(screen, SPACE2, 32, f'Level - {self.level}', WHITE, position='closecenterup')
-        create_draw_text(screen, SPACE, 16, 'Lifes - ', WHITE, position='closecenterleft')
-
-        x_pos_lifes = 0
-        for life in range(self.remaining_lifes):
-            screen.blit(self.ship_img, ((WIDTH/2-(self.ship_rect.w/2))+x_pos_lifes, HEIGHT/2-(self.ship_rect.w/2)))
-            x_pos_lifes += self.ship_rect.w
-
-        self._blink_message(screen, SPACE, 16, 'Press < SPACE > to start', WHITE, position='bottomcenter')
-
-        pg.display.flip()
 
 class GameOver(Scene):
     '''
@@ -525,6 +496,9 @@ class NewRecord(Scene):
 
     def __init__(self, score):
         Scene.__init__(self)
+        self.bg_sound = NEW_RECORD_SOUND
+        self.bg_sound.set_volume(BACKGROUND_VOL)
+        self.bg_sound.play()
 
         n = [x for x in range(1,27)]
         l = [x for x in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ']
@@ -556,6 +530,7 @@ class NewRecord(Scene):
                     self.recorded = True
                 else:
                     self.switchToScene(TitleScene())
+                    self.bg_sound.stop()
             SELECTED_SOUND.play()
 
 

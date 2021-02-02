@@ -2,7 +2,7 @@ import pygame as pg
 
 import sys
 
-from config import WIDTH, HEIGHT, FPS
+from config import WIDTH, HEIGHT, FPS, TITLE
 
 from the_quest.scenes import InitialAnimation
 
@@ -10,7 +10,7 @@ class Screen:
 
     def __init__(self, starting_scene):
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
-        pg.display.set_caption('The quest')
+        pg.display.set_caption(TITLE)
 
         self.active_scene = starting_scene
 

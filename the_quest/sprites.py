@@ -18,7 +18,7 @@ class Ship(pg.sprite.Sprite):
 
         self.selected_expl_img = 0
         self.speed_explosion = 0
-        self.explosion_sound = load_sound(SOUNDS_FOLDER, 'explosion.wav')
+        self.explosion_sound = EXPLOSION_SOUND
 
         self.lifes = LIFES
 
@@ -142,10 +142,9 @@ class Meteor(pg.sprite.Sprite):
 
         self.random_meteor = random.randrange(1,6)
 
-        self.image, self.rect = load_image(
-                        METEORS_FOLDER, 
-                        f'meteor{self.random_meteor}.png', 
-                        x=WIDTH, y=random.randrange(50, HEIGHT-METEORS_DATA[f'meteor{self.random_meteor}']['height'])
+        self.image, self.rect = load_image(METEORS_FOLDER, f'meteor{self.random_meteor}.png', 
+                        x=WIDTH, 
+                        y=random.randrange(50, HEIGHT-METEORS_DATA[f'meteor{self.random_meteor}']['height'])
                         ) 
 
         self.points = METEORS_DATA[f'meteor{self.random_meteor}']['points']
@@ -160,11 +159,11 @@ class Meteor(pg.sprite.Sprite):
         '''
         self.rect.x -= self.vx
         # Maybe not?
-        self._rotate()
+        # self._rotate()
 
     def _rotate(self):
         '''
-        Method who makes the ship rotation
+        Method who makes the asteroid rotation. Not implemented (Check line 162)
         '''
         self.angle = (self.angle + 1)%360
         rotated_img = pg.transform.rotozoom(load_image(METEORS_FOLDER, f'meteor{self.random_meteor}.png', rect=False), self.angle, 1)

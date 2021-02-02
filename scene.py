@@ -50,30 +50,28 @@ class Scene:
 
 class LevelScene(Scene):
 
-    def __init__(self, planet_name, level, go_scene):
+    def __init__(self, go_scene): 
         Scene.__init__(self)
 
-        self.bg_sound = load_sound(SOUNDS_FOLDER, 'background_sound.ogg')
+        self.bg_sound = GAME_BG_SOUND
         self.bg_sound.set_volume(BACKGROUND_VOL)
         self.bg_sound.play()
 
         # Background img
-        self.bg_img = load_image(IMAGES_FOLDER, 'background.png', rect=False)
+        self.bg_img = BACKGROUND
         self.bg_x = 0 # For moving background
 
         self.meteors = pg.sprite.Group()
         self.ship = Ship()
         self.black_screen = BlackScreen()
         self.pause_screen = PauseScreen()
-        self.go_scene = go_scene
+        self.go_scene = go_scene 
 
-        self.planet, self.rect_planet = load_image(IMAGES_FOLDER, f'{planet_name}.png', x=WIDTH, y=50)
         self.planet_x = 0 # For movement planet end level
-        self.planet_name = planet_name
-
+        
         self.score = 0
         self.meteors_dodged = 0
-        self.level = level
+        self.level = 1
         self.added_bonus_landing = False
         self.added_bonus_lifes = False
 
@@ -168,6 +166,9 @@ class LevelScene(Scene):
                 self.ship.explosion_sound.play()
 
     def _top_level_menu(self, screen):
+        '''
+        Draws the top level menu
+        '''
         top_level_img, top_level_img_rect = load_image(IMAGES_FOLDER, 'score1.png')
 
         create_draw_text(screen, SPACE2, 24, f'Lifes - {self.ship.lifes}', WHITE, pos_x=50, pos_y=10)
@@ -177,7 +178,10 @@ class LevelScene(Scene):
         screen.blit(top_level_img, (0, 0))
 
     def _draw_planet(self, screen, dt):
-
+        '''
+        Draws the planet when we reach the meteors dodged limit.
+        '''
+        
         if self.meteors_dodged >= METEORS_TO_DODGE:
             if self.ship.state != STATES['LANDED'] and self.ship.state != STATES['HIDDEN']:
                 self.ticks += dt
@@ -190,6 +194,9 @@ class LevelScene(Scene):
             screen.blit(self.planet, (self.rect_planet.x-self.planet_x, self.rect_planet.y)) 
 
     def _end_level_msg(self, screen, dt):
+        '''
+        Method that changes the end of level message at same time the ship state is changing
+        '''
 
         if self.planet_x >= 270:
             if self.ship.state == STATES['ALIVE']:
@@ -213,6 +220,10 @@ class LevelScene(Scene):
                 self._blink_message(screen, SPACE2, 24, 'Press < SPACE > to continue', WHITE, position='bottomcenter')
 
     def _landing_msg(self, screen):
+        '''
+        Landing message for end level.
+        Check "How To Play" to see how the ship needs to be for every landing
+        '''
         if self.ship.rect.top >= 260 and self.ship.rect.bottom <= 340:
             pos_land_msg = 'PERFECT'
             if not self.added_bonus_landing:    
@@ -232,6 +243,9 @@ class LevelScene(Scene):
         create_draw_text(screen, SPACE2, 34, f'{pos_land_msg} LANDED!', WHITE, position='topcenter')
 
     def _add_lifes_bonus(self):
+        '''
+        Adds, at the end of level, a bonus for the remaining lifes
+        '''
         if not self.added_bonus_lifes:
             if self.ship.lifes == 3:
                 self.score += 1000
@@ -242,6 +256,9 @@ class LevelScene(Scene):
             self.added_bonus_lifes = True
 
     def _reset(self):
+        '''
+        Resets the level
+        '''
         self.meteors.empty()
         self.ship.state = STATES['ALIVE']
         self.ship.rect.y = 276
@@ -252,8 +269,8 @@ class LevelScene(Scene):
 
 class AdvancedLevelScene(LevelScene):
 
-    def __init__(self, planet_name, level, go_scene, score, lifes):
-        LevelScene.__init__(self, planet_name, level, go_scene)
+    def __init__(self, go_scene, score, lifes):
+        LevelScene.__init__(self, go_scene)
 
         self.last_score = score
         self.score += self.last_score

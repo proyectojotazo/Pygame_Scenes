@@ -70,6 +70,9 @@ class PauseScreen:
     def on_pause(self, screen):
         '''
         Mainloop of Pause
+        We use self.reset to pass if we want to reset to the initial parameters.
+        If self reset == False, we continue the game 
+        Else, we reset lifes and score as same we start the level
         '''
         self.reset = False
         while self.paused:
@@ -132,6 +135,7 @@ class PauseScreen:
         '''
 
         load_and_draw_image(screen, IMAGES_FOLDER, 'pause1.png', x=200, y=170)
+        create_draw_text(screen, SPACE2, 48, 'PAUSE', WHITE, position='closecenterup')
 
         if option == 0:
             create_draw_text(screen, SPACE2, 32, 'Continue', RED, position='center')
@@ -146,5 +150,5 @@ class PauseScreen:
             create_draw_text(screen, SPACE2, 32, 'Restart', WHITE, position="closecenterbottom")
             create_draw_text(screen, SPACE2, 32, 'Quit', RED, position="closecenterbottom2")
 
-        create_draw_text(screen, SPACE2, 48, 'PAUSE', WHITE, position='closecenterup')
+        
         pg.display.flip()

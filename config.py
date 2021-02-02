@@ -74,11 +74,14 @@ SILVER2 = (128, 128, 128)
 BRONCE = (153, 101, 21)
 
 # Fonts
-SPACE = os.path.join(FONTS_FOLDER, 'Space_font.ttf')
 SPACE2 = os.path.join(FONTS_FOLDER, 'Space_font2.ttf')
 TITLE = os.path.join(FONTS_FOLDER, 'title-rayadoitalic2.otf')
 
 # Sounds
+TITLE_BG_SOUND = load_sound(SOUNDS_FOLDER, 'title-screen.wav')
+GAME_BG_SOUND = load_sound(SOUNDS_FOLDER, 'background_sound.ogg')
+EXPLOSION_SOUND = load_sound(SOUNDS_FOLDER, 'explosion.wav')
+NEW_RECORD_SOUND = load_sound(SOUNDS_FOLDER, 'NewRecord.wav')
 OPTION_SOUND = load_sound(SOUNDS_FOLDER, 'option.wav')
 OPTION_SOUND.set_volume(0.02)
 SELECTED_SOUND = load_sound(SOUNDS_FOLDER, 'option-selected.wav')
@@ -86,3 +89,6 @@ SELECTED_SOUND.set_volume(0.02)
 
 # Sounds Settings
 BACKGROUND_VOL = 0.05
+
+# Images
+BACKGROUND = load_image(IMAGES_FOLDER, 'background.png', rect=False)
