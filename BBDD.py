@@ -184,7 +184,3 @@ class BBDD:
     def reset_records(self):
         self._delete_all_records()
         self._insert_default_records()
-    
-if __name__ == '__main__':
-    a = BBDD()
-    

@@ -213,8 +213,6 @@ class LevelScene(Scene):
                 self._landing_msg(screen)
 
             if self.ship.state == STATES['HIDDEN']:
-                
-                # self.ticks += dt
 
                 create_draw_text(screen, SPACE2, 54, f'{self.planet_name} CONQUERED!', WHITE, position='center')
                 self._blink_message(screen, SPACE2, 24, 'Press < SPACE > to continue', WHITE, position='bottomcenter')

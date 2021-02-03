@@ -36,7 +36,6 @@ class BlackScreen:
                     self.start = True
 
     def _update_screen(self, screen, level, lifes):
-        # TODO: Function for blink text
         '''
         Method that draws and update the black screen
         '''
@@ -66,6 +65,7 @@ class PauseScreen:
         self.option = 0
         self.paused = True
         self.reset = False
+        self.main_menu = False
 
     def on_pause(self, screen):
         '''
@@ -74,13 +74,13 @@ class PauseScreen:
         If self reset == False, we continue the game 
         Else, we reset lifes and score as same we start the level
         '''
-        self.reset = False
+        
         while self.paused:
             self._handle_events()
             self._draw_paused_menu(self.option, screen)
         self.paused = True
         self.option = 0
-        return self.reset
+        return self.reset, self.main_menu
 
     def _handle_events(self):
         '''
@@ -100,7 +100,7 @@ class PauseScreen:
         if event.key == pg.K_ESCAPE:
             self.paused = False
         if event.key == pg.K_DOWN:
-            if self.option < 2:
+            if self.option < 3:
                 OPTION_SOUND.play()
                 self.option += 1
         if event.key == pg.K_UP:
@@ -124,31 +124,28 @@ class PauseScreen:
             self.paused = False
             self.reset = True
         if option == 2:
+            self.paused = False
+            self.main_menu = True
+        if option == 3:
             pg.quit()
             sys.exit()
 
     def _draw_paused_menu(self, option, screen):
-        #TODO: Try to refactor this
         '''
         Method that draws the Pause menu
         Draws with red color the selected option
         '''
 
-        load_and_draw_image(screen, IMAGES_FOLDER, 'pause1.png', x=200, y=170)
+        load_and_draw_image(screen, IMAGES_FOLDER, 'pause-img.png', x=200, y=170)
         create_draw_text(screen, SPACE2, 48, 'PAUSE', WHITE, position='closecenterup')
 
-        if option == 0:
-            create_draw_text(screen, SPACE2, 32, 'Continue', RED, position='center')
-            create_draw_text(screen, SPACE2, 32, 'Restart', WHITE, position="closecenterbottom")
-            create_draw_text(screen, SPACE2, 32, 'Quit', WHITE, position="closecenterbottom2")
-        elif option == 1:
-            create_draw_text(screen, SPACE2, 32, 'Continue', WHITE, position='center')
-            create_draw_text(screen, SPACE2, 32, 'Restart', RED, position="closecenterbottom")
-            create_draw_text(screen, SPACE2, 32, 'Quit', WHITE, position="closecenterbottom2")
-        else:
-            create_draw_text(screen, SPACE2, 32, 'Continue', WHITE, position='center')
-            create_draw_text(screen, SPACE2, 32, 'Restart', WHITE, position="closecenterbottom")
-            create_draw_text(screen, SPACE2, 32, 'Quit', RED, position="closecenterbottom2")
+        colors = [(RED, WHITE, WHITE, WHITE), (WHITE, RED, WHITE, WHITE), (WHITE, WHITE, RED, WHITE), (WHITE, WHITE, WHITE, RED)]
 
-        
+        for pos in range(4):
+            if pos == option:
+                create_draw_text(screen, SPACE2, 32, 'Continue', colors[pos][0], position='center')
+                create_draw_text(screen, SPACE2, 32, 'Restart', colors[pos][1], position="closecenterbottom")
+                create_draw_text(screen, SPACE2, 32, 'Return to Main Menu', colors[pos][2], position="closecenterbottom2")
+                create_draw_text(screen, SPACE2, 32, 'Quit', colors[pos][3], position="closecenterbottom3")    
+
         pg.display.flip()

@@ -137,16 +137,66 @@ class HowToPlay(Scene):
         create_draw_text(screen, SPACE2, 20, '1/3', WHITE, pos_x=720, pos_y=550)
 
     def _draw_keys(self, screen):
-        load_and_draw_image(screen, HOW_TO_FOLDER, 'up.png', 40, 280)
-        load_and_draw_image(screen, HOW_TO_FOLDER, 'down.png', 40, 360)
-        load_and_draw_image(screen, HOW_TO_FOLDER, 'spacebar.png', 390, 280)
-        load_and_draw_image(screen, HOW_TO_FOLDER, 'escape.png', 390, 360)
-
+        images = {
+            1:{
+                'img':'up.png',
+                'x':40,
+                'y':250
+            },
+            2:{
+                'img':'down.png',
+                'x':40,
+                'y':330
+            },
+            3:{
+                'img':'spacebar.png',
+                'x':390,
+                'y':250
+            },
+            4:{
+                'img':'escape.png',
+                'x':390,
+                'y':330
+            },
+            5:{
+                'img':'P.png',
+                'x':250,
+                'y':405
+            }
+        }
+        for x in range(1,6):
+            load_and_draw_image(screen, HOW_TO_FOLDER, images[x]['img'], images[x]['x'], images[x]['y'])
+        
     def _draw_keys_text(self, screen):
-        create_draw_text(screen, SPACE2, 24, 'Moves ship up', WHITE, pos_x=120, pos_y=300)
-        create_draw_text(screen, SPACE2, 24, 'Moves ship down', WHITE, pos_x=120, pos_y=380)
-        create_draw_text(screen, SPACE2, 24, 'Action/Accept Key', WHITE, pos_x=520, pos_y=300)
-        create_draw_text(screen, SPACE2, 24, 'Quit the game', WHITE, pos_x=520, pos_y=380)
+        text = {
+            1:{
+                'text':'Moves ship up',
+                'x':120,
+                'y':270,
+            },
+            2:{
+                'text':'Moves ship down',
+                'x':120,
+                'y':350,
+            },
+            3:{
+                'text':'Action/Accept Key',
+                'x':520,
+                'y':270,
+            },
+            4:{
+                'text':'Quit the game',
+                'x':520,
+                'y':350,
+            },
+            5:{
+                'text':'Pause the game',
+                'x':360,
+                'y':425,
+            },
+        }
+        for x in range(1,6):
+            create_draw_text(screen, SPACE2, 24, text[x]['text'], WHITE, pos_x=text[x]['x'], pos_y=text[x]['y'])    
 
 class HowToPlay2(Scene):
     '''
@@ -330,7 +380,6 @@ class Fade(Scene):
             self.fade.set_alpha(alpha)            
             screen.blit(self.fade, (0,0))
             pg.display.flip()
-            pg.time.delay(5)
 
     def _fade_in(self, screen):
         for alpha in range(255, 0, -1):
@@ -408,11 +457,14 @@ class Level1(LevelScene):
         if event.key == pg.K_p and self.ship.state == STATES['ALIVE']:
             # Pause Menu
             pg.mixer.pause()
-            reset = self.pause_screen.on_pause(screen)
+            reset, main_menu = self.pause_screen.on_pause(screen)
             if reset:
                 pg.mixer.stop()
                 self._reset(all_data=True)
                 self.switchToScene(Transition(Level1(GameOver()), self.ship.lifes, self.score))
+            if main_menu:
+                pg.mixer.stop()
+                self.switchToScene(TitleScene())
             pg.mixer.unpause()
     
     def _reset(self, all_data=False):
@@ -453,11 +505,14 @@ class Level2(AdvancedLevelScene):
         if event.key == pg.K_p and self.ship.state == STATES['ALIVE']:
             # Pause Menu
             pg.mixer.pause()
-            reset = self.pause_screen.on_pause(screen)
+            reset, main_menu = self.pause_screen.on_pause(screen)
             if reset:
                 pg.mixer.stop()
                 self._reset(all_data=True)
                 self.switchToScene(Transition(Level2(GameOver(), self.score, self.ship.lifes), self.ship.lifes, self.score))
+            if main_menu:
+                pg.mixer.stop()
+                self.switchToScene(TitleScene())
             pg.mixer.unpause()
     
     def _reset(self, all_data=False):
