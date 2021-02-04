@@ -138,6 +138,7 @@ class LevelScene(Scene):
         If we reach the maximum meteors dodged we stop to add meteors dodged and score
         '''
         for meteor in self.meteors:
+            # if meteor.rect.right <= 0:
             if meteor.rect.right <= 0:
                 self.meteors.remove(meteor)
                 self.score += meteor.points

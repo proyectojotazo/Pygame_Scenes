@@ -158,15 +158,3 @@ class Meteor(pg.sprite.Sprite):
         Update meteor method
         '''
         self.rect.x -= self.vx
-        # Maybe not?
-        # self._rotate()
-
-    def _rotate(self):
-        '''
-        Method who makes the asteroid rotation. Not implemented (Check line 162)
-        '''
-        self.angle = (self.angle + 1)%360
-        rotated_img = pg.transform.rotozoom(load_image(METEORS_FOLDER, f'meteor{self.random_meteor}.png', rect=False), self.angle, 1)
-        rect_rotated_img = rotated_img.get_rect(center=(self.rect.centerx, self.rect.centery))
-        self.image = rotated_img
-        self.rect = rect_rotated_img

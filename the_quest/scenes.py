@@ -95,6 +95,9 @@ class TitleScene(Scene):
         pg.display.flip()
 
     def _draw_options(self, screen):
+        '''
+        Method that shows in red color the actual option selected
+        '''
         
         text = ['New Game', 'How To Play', 'Records', 'Exit']
         pos = ['center', 'closecenterbottom', 'closecenterbottom2', 'closecenterbottom3']
@@ -237,9 +240,9 @@ class HowToPlay2(Scene):
     def _top_level_menu(self, screen):
         top_level_img, top_level_img_rect = load_image(IMAGES_FOLDER, 'score1.png')
 
-        create_draw_text(screen, SPACE2, 24, f'Lifes - 3', WHITE, pos_x=50, pos_y=10)
-        create_draw_text(screen, SPACE2, 24, f'Meteors Dodged - 0', WHITE, pos_x=240, pos_y=10)
-        create_draw_text(screen, SPACE2, 24, f'Score - 0', WHITE, pos_x=580, pos_y=10)
+        text_to_draw = [('Lifes - 3', 50), ('Meteors Dodged - 0', 240), ('Score - 0', 580)]
+        for element in text_to_draw:
+            create_draw_text(screen, SPACE2, 24, element[0], WHITE, pos_x=element[1], pos_y=10)
         
         screen.blit(top_level_img, (0, 0))
 
