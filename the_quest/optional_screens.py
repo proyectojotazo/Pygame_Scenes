@@ -9,7 +9,8 @@ class BlackScreen:
 
     def __init__(self):
         self.start = False
-        self.ship_img, self.ship_rect = load_image(SHIP_FOLDER, 'ship1.png')
+        self.ship_img = SHIP
+        self.ship_rect = self.ship_img.get_rect()
         self.ticks = 0
 
     def on_black(self, screen, level, lifes):
@@ -64,6 +65,7 @@ class PauseScreen:
 
         self.option = 0
         self.paused = True
+        
         self.reset = False
         self.main_menu = False
 
@@ -116,7 +118,8 @@ class PauseScreen:
         Method that checks the option selected
         Selected Continue -> option = 0
         Selected Restart -> option = 1
-        Selected Quit -> option = 2
+        Selected Return Main Menu -> option = 2
+        Selected Quit -> option = 3
         '''
         if option == 0:
             self.paused = False
@@ -136,7 +139,7 @@ class PauseScreen:
         Draws with red color the selected option
         '''
 
-        load_and_draw_image(screen, IMAGES_FOLDER, 'pause-img.png', x=200, y=170)
+        load_and_draw_image(screen, PAUSE, x=200, y=170)
         create_draw_text(screen, SPACE2, 48, 'PAUSE', WHITE, position='closecenterup')
 
         colors = [(RED, WHITE, WHITE, WHITE), (WHITE, RED, WHITE, WHITE), (WHITE, WHITE, RED, WHITE), (WHITE, WHITE, WHITE, RED)]

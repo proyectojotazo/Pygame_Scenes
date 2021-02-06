@@ -54,7 +54,7 @@ class LevelScene(Scene):
         Scene.__init__(self)
 
         self.bg_sound = GAME_BG_SOUND
-        self.bg_sound.set_volume(BACKGROUND_VOL)
+        self.bg_sound.set_volume(DEFAULT_VOL)
         self.bg_sound.play()
 
         # Background img
@@ -95,16 +95,11 @@ class LevelScene(Scene):
 
         self._move_background(screen)
         self._top_level_menu(screen)
-        self._draw_planet(screen, dt) # Drawing planet at the end of level
-        screen.blit(self.ship.image, (self.ship.rect.x, self.ship.rect.y))
-        self.meteors.draw(screen)
-        self._end_level_msg(screen, dt)
-
         self._collition()
-        
         self._update_sprites()
-
         self._remove_meteors()
+        self._end_level_msg(screen, dt)
+        self._draw_planet(screen, dt) # Drawing planet at the end of level
 
         if self.ship.state == STATES['NOT ALIVE']:
             self.black_screen.on_black(screen, self.level, self.ship.lifes)
@@ -113,6 +108,9 @@ class LevelScene(Scene):
 
         if self.ship.state == STATES['DEAD']:
             self.switchToScene(self.go_scene)
+
+        screen.blit(self.ship.image, (self.ship.rect.x, self.ship.rect.y))
+        self.meteors.draw(screen)
 
         pg.display.flip()
     
@@ -170,7 +168,7 @@ class LevelScene(Scene):
         '''
         Draws the top level menu
         '''
-        top_level_img, top_level_img_rect = load_image(IMAGES_FOLDER, 'score1.png')
+        top_level_img = TOP_LEVEL
 
         create_draw_text(screen, SPACE2, 24, f'Lifes - {self.ship.lifes}', WHITE, pos_x=50, pos_y=10)
         create_draw_text(screen, SPACE2, 24, f'Meteors Dodged - {self.meteors_dodged}', WHITE, pos_x=240, pos_y=10)

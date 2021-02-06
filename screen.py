@@ -2,17 +2,17 @@ import pygame as pg
 
 import sys
 
-from config import WIDTH, HEIGHT, FPS, TITLE
+from config import WIDTH, HEIGHT, FPS, GAME_TITLE
 
 from the_quest.scenes import InitialAnimation
 
 class Screen:
 
-    def __init__(self, starting_scene):
+    def __init__(self):
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
-        pg.display.set_caption(TITLE)
+        pg.display.set_caption(GAME_TITLE)
 
-        self.active_scene = starting_scene
+        self.active_scene = InitialAnimation()
 
         self.clock = pg.time.Clock()
 
@@ -24,5 +24,5 @@ class Screen:
 
 if __name__ == '__main__':
     pg.init()
-    a = Screen(InitialAnimation())
+    a = Screen()
     a.start_game()

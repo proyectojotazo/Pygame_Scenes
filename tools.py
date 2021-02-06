@@ -8,33 +8,21 @@ import os
 
 # IMAGES TOOLS
 
-def load_image(path, img, x=0, y=0, rect=True):
+def load_image(path, img):
     '''
-    Function that returns image and rect.
+    Function that returns image
     path = It's a "os" folder
     img = name of the image that we want to load
-    x,y = If we don't change it's equals to 0, it works when we need to choose a different x,y for our rect
-    rect = The rect parameter works:
-        - If we want the rect of the image, we use as default True
-        - If we only need to take the image, we use rect=False, then, only returns the image
     '''
+    img = pg.image.load(os.path.join(path, img))
 
-    if rect:
-        img = pg.image.load(os.path.join(path, img))
-        rect = img.get_rect(x=x, y=y)
+    return img
 
-        return img, rect
-
-    else:
-        img = pg.image.load(os.path.join(path, img))
-
-        return img
-
-def load_and_draw_image(screen, path, img, x=0, y=0):
+def load_and_draw_image(screen, path, x=0, y=0):
     '''
     Method that loads and draws the image at same time
     '''
-    img = pg.image.load(os.path.join(path, img))
+    img = path
     rect = img.get_rect()
 
     screen.blit(img, (x, y))

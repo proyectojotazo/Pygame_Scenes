@@ -26,7 +26,7 @@ class InitialAnimation(Scene):
     def update(self, screen, dt):
         screen.fill(BLACK)
 
-        load_and_draw_image(screen, SHIP_FOLDER, 'ship1-left.png', x=self.x_pos_ship, y=self.y_pos_ship)
+        load_and_draw_image(screen, SHIP_TITLE, x=self.x_pos_ship, y=self.y_pos_ship)
         create_draw_text(screen, TITLE, 120, 'THE QUEST', WHITE, pos_x=self.x_pos_title, pos_y=self.y_pos_title)
 
         self.x_pos_ship -= 5
@@ -49,7 +49,7 @@ class TitleScene(Scene):
 
         # Title Music
         self.title_sound = TITLE_BG_SOUND
-        self.title_sound.set_volume(BACKGROUND_VOL)
+        self.title_sound.set_volume(DEFAULT_VOL)
         self.title_sound.play()
 
     def _keydown_events(self, event, screen):
@@ -142,33 +142,33 @@ class HowToPlay(Scene):
     def _draw_keys(self, screen):
         images = {
             1:{
-                'img':'up.png',
+                'img':UP_KEY,
                 'x':40,
                 'y':250
             },
             2:{
-                'img':'down.png',
+                'img':DOWN_KEY,
                 'x':40,
                 'y':330
             },
             3:{
-                'img':'spacebar.png',
+                'img':SPACEBAR_KEY,
                 'x':390,
                 'y':250
             },
             4:{
-                'img':'escape.png',
+                'img':ESCAPE_KEY,
                 'x':390,
                 'y':330
             },
             5:{
-                'img':'P.png',
+                'img':P_KEY,
                 'x':250,
                 'y':405
             }
         }
         for x in range(1,6):
-            load_and_draw_image(screen, HOW_TO_FOLDER, images[x]['img'], images[x]['x'], images[x]['y'])
+            load_and_draw_image(screen, images[x]['img'], images[x]['x'], images[x]['y'])
         
     def _draw_keys_text(self, screen):
         text = {
@@ -208,8 +208,8 @@ class HowToPlay2(Scene):
     def __init__(self):
         Scene.__init__(self)
         self.bg_img = BACKGROUND
-        self.ship_img, self.ship_rect = load_image(SHIP_FOLDER, 'ship1.png')
-        self.planet = load_image(IMAGES_FOLDER, 'JUPITER.png', rect=False)
+        self.ship_img = SHIP
+        self.planet = JUPITER
 
     def _keydown_events(self, event, screen):
         Scene._keydown_events(self, event, screen)
@@ -238,7 +238,8 @@ class HowToPlay2(Scene):
         create_draw_text(screen, SPACE2, 20, '2/3', WHITE, pos_x=20, pos_y=550)
 
     def _top_level_menu(self, screen):
-        top_level_img, top_level_img_rect = load_image(IMAGES_FOLDER, 'score1.png')
+        top_level_img = TOP_LEVEL
+        top_level_img_rect = top_level_img.get_rect()
 
         text_to_draw = [('Lifes - 3', 50), ('Meteors Dodged - 0', 240), ('Score - 0', 580)]
         for element in text_to_draw:
@@ -334,6 +335,13 @@ class Records(Scene):
         self.ticks += dt
         screen.fill(BLACK)
 
+        self._draw_static_text(screen)
+        self._draw_records(screen)
+        self._blink_message(screen, SPACE2, 24, 'Press < SPACE > to go Main Menu', WHITE, position='bottomcenter')
+
+        pg.display.flip()
+
+    def _draw_static_text(self, screen):
         # Draws static text
         create_draw_text(screen, SPACE2, 20, 'Press R to reset records', WHITE, pos_x=10, pos_y=10)
         create_draw_text(screen, SPACE2, 54, 'RECORDS', WHITE, position='topcenter')
@@ -341,6 +349,7 @@ class Records(Scene):
         create_draw_text(screen, SPACE2, 28, 'SCORE', WHITE, pos_x=340, pos_y=180)
         create_draw_text(screen, SPACE2, 28, 'NAME', WHITE, pos_x=550, pos_y=180)
 
+    def _draw_records(self, screen):
         # Records stored in our database
         records = BBDD().get_dict_records(BBDD()._select_records())
 
@@ -351,10 +360,6 @@ class Records(Scene):
             create_draw_text(screen, SPACE2, 24, str(records[f'record{x}']['score']), records[f'record{x}']['color'], pos_x=350, pos_y=rank_y)
             create_draw_text(screen, SPACE2, 24, records[f'record{x}']['name'], records[f'record{x}']['color'], pos_x=560, pos_y=rank_y)
             rank_y += 40
-
-        self._blink_message(screen, SPACE2, 24, 'Press < SPACE > to go Main Menu', WHITE, position='bottomcenter')
-
-        pg.display.flip()
 
 class Fade(Scene):
     '''
@@ -406,7 +411,8 @@ class Transition(Scene):
     '''
     def __init__(self, next_level, lifes, score):
         Scene.__init__(self)
-        self.ship_img, self.ship_rect = load_image(SHIP_FOLDER, 'ship1.png')
+
+        self.ship_img = SHIP
         self.ix_pos = -50
         self.next_level = next_level
         self.lifes = lifes
@@ -420,11 +426,13 @@ class Transition(Scene):
     def update(self, screen, dt):
         self.ticks += dt
 
-        load_and_draw_image(screen, IMAGES_FOLDER, 'background.png')
-        load_and_draw_image(screen, IMAGES_FOLDER, 'score1.png', y=self.ix_pos)
+        load_and_draw_image(screen, BACKGROUND)
+        load_and_draw_image(screen, TOP_LEVEL, y=self.ix_pos)
+
         create_draw_text(screen, SPACE2, 24, f'Lifes - {self.lifes}', WHITE, pos_x=50, pos_y=self.ix_pos+10)
         create_draw_text(screen, SPACE2, 24, 'Meteors Dodged - 0' , WHITE, pos_x=240, pos_y=self.ix_pos+10)
         create_draw_text(screen, SPACE2, 24, f'Score - {self.score}', WHITE, pos_x=580, pos_y=self.ix_pos+10)
+
         screen.blit(self.ship_img, (self.ix_pos, 276))
 
         if self.ix_pos == 0:
@@ -446,7 +454,8 @@ class Level1(LevelScene):
     def __init__(self, go_scene):
         LevelScene.__init__(self, go_scene)
         self.planet_name = 'JUPITER'
-        self.planet, self.rect_planet = load_image(IMAGES_FOLDER, f'{self.planet_name}.png', x=WIDTH, y=50)
+        self.planet = JUPITER
+        self.rect_planet = self.planet.get_rect(x=WIDTH, y=50)
 
     def _keydown_events(self, event, screen):
         LevelScene._keydown_events(self, event, screen)
@@ -486,7 +495,8 @@ class Level2(AdvancedLevelScene):
     def __init__(self, go_scene, score, lifes):
         AdvancedLevelScene.__init__(self, go_scene, score, lifes)
         self.planet_name = 'MARS'
-        self.planet, self.rect_planet = load_image(IMAGES_FOLDER, f'{self.planet_name}.png', x=WIDTH, y=50)
+        self.planet = MARS
+        self.rect_planet = self.planet.get_rect(x=WIDTH, y=50)
         self.level = 2
 
     def _keydown_events(self, event, screen):
@@ -530,7 +540,7 @@ class GameOver(Scene):
 
     def __init__(self):
         Scene.__init__(self)
-
+        
     def _keydown_events(self, event, screen):
         Scene._keydown_events(self, event, screen)
         if event.key == pg.K_SPACE:
@@ -555,12 +565,12 @@ class NewRecord(Scene):
     def __init__(self, score):
         Scene.__init__(self)
         self.bg_sound = NEW_RECORD_SOUND
-        self.bg_sound.set_volume(BACKGROUND_VOL)
+        self.bg_sound.set_volume(DEFAULT_VOL)
         self.bg_sound.play()
 
         n = [x for x in range(1,27)]
         l = [x for x in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ']
-        self.options = dict(zip(n, l))
+        self.options = dict(zip(n, l)) 
 
         self.sel_option = 1
         self.l = [] # For store the letters we put in NewRecord
